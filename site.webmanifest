@@ -1,9 +1,1 @@
-{
-  "name": "Mosquito Ninja",
-  "short_name": "Mosquito Ninja",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#0C1410",
-  "theme_color": "#0C1410",
-  "icons": [{ "src": "/assets/mark.svg", "sizes": "any", "type": "image/svg+xml" }]
-}
+{"name":"Mosquito Ninja","short_name":"Mosquito Ninja","start_url":"/","display":"standalone","background_color":"#080a09","theme_color":"#080a09","icons":[]}
