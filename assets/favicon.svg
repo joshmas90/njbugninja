@@ -1,9 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="t"><title id="t">Mosquito Ninja mark</title>
-<circle cx="48" cy="48" r="42" fill="#0a0d0b" stroke="#d51f25" stroke-width="5"/>
-<path d="M20 45c8-18 17-25 28-25s21 7 28 25c-5 18-15 27-28 27S25 63 20 45Z" fill="#20251f"/>
-<path d="M25 43c8-8 38-8 46 0-5 9-13 14-23 14S30 52 25 43Z" fill="#9a725c"/>
-<path d="M21 40c8-16 17-23 27-23 13 0 24 8 31 25-14-8-42-7-58-2Z" fill="#0d100e"/>
-<path d="M22 57c14 8 39 8 53-2-4 17-13 25-27 25S26 72 22 57Z" fill="#0d100e"/>
-<path d="M31 46c5-3 10-3 15 0-5 4-10 4-15 0Zm19 0c5-3 10-3 15 0-5 4-10 4-15 0Z" fill="#f2efe4"/>
-<path d="M17 70 79 27" stroke="#d51f25" stroke-width="7" stroke-linecap="square"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title">
+  <title id="title">Mosquito Ninja — crossed-out mosquito</title>
+  <circle cx="50" cy="50" r="44" fill="#fff"/>
+  <g fill="none" stroke="#080a09" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M46 44 31 42 21 51M45 52 30 55 24 68M47 61 36 69 34 80"/>
+    <path d="M54 44 69 42 79 51M55 52 70 55 76 68M53 61 64 69 66 80"/>
+    <path d="M50 26V15M47 29 40 23M53 29 60 23"/>
+  </g>
+  <g fill="#fff" stroke="#080a09" stroke-width="3.5" stroke-linejoin="round">
+    <path d="M47 43C39 29 23 23 22 31S34 46 47 47Z"/>
+    <path d="M53 43C61 29 77 23 78 31S66 46 53 47Z"/>
+  </g>
+  <g fill="#080a09">
+    <circle cx="50" cy="32" r="5.5"/>
+    <ellipse cx="50" cy="45" rx="6" ry="10"/>
+    <path d="M45 51C42 62 46 75 50 81 54 75 58 62 55 51Z"/>
+  </g>
+  <path d="M20 80 80 20" stroke="#fff" stroke-width="14"/>
+  <path d="M20 80 80 20" stroke="#e02027" stroke-width="9"/>
+  <circle cx="50" cy="50" r="44" fill="none" stroke="#e02027" stroke-width="10"/>
 </svg>
