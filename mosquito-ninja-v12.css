@@ -110,3 +110,10 @@
 /* Approved brand artwork, visible to visitors and image crawlers. */
 .footer-artwork{display:block;width:min(100%,330px)}
 .footer-artwork img{width:100%;height:auto}
+
+/* Keep the collapsed mobile navigation out of keyboard focus. */
+@media(max-width:980px){
+  .nav{visibility:hidden}
+  .nav.open{visibility:visible}
+}
+.menu-toggle:focus-visible,.nav a:focus-visible,.faq-list summary:focus-visible{outline:2px solid var(--green);outline-offset:4px}
