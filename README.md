@@ -1,4 +1,2 @@
-# Mosquito Ninja approved rebuild
-Fresh static rebuild matching the approved cinematic homepage direction.
-
-Hostinger deploys the root of `main` to `public_html`.
+# Mosquito Ninja V12
+Cache-safe cinematic build with full-resolution hero/backyard assets and a clean South Jersey vector-style map.
