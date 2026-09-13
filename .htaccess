@@ -1,0 +1,15 @@
+# Hostinger already enforces HTTPS. Consolidate the remaining duplicate URLs.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Redirect only a client request for index.html, never a DirectoryIndex lookup.
+  RewriteCond %{THE_REQUEST} \s/+index\.html(?:[?\s]) [NC]
+  RewriteRule ^index\.html$ https://njbugninja.com/ [R=301,L]
+
+  # Keep paths and query strings when consolidating www into the canonical host.
+  RewriteCond %{HTTP_HOST} ^www\.njbugninja\.com(?::[0-9]+)?$ [NC]
+  RewriteRule ^ https://njbugninja.com%{REQUEST_URI} [R=301,L,NE]
+</IfModule>
+
+# Missing URLs must remain HTTP 404; do not rewrite all requests to the homepage.
+ErrorDocument 404 /404.html
