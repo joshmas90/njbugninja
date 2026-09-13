@@ -106,3 +106,7 @@
 .prose a:hover{color:#a9141c}
 .prose h3:first-child{margin-top:0}
 .content-grid>*{min-width:0}
+
+/* Approved brand artwork, visible to visitors and image crawlers. */
+.footer-artwork{display:block;width:min(100%,330px)}
+.footer-artwork img{width:100%;height:auto}
