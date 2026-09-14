@@ -46,4 +46,12 @@ Google references: [canonical URLs](https://developers.google.com/search/docs/cr
 
 This website does not import any app source, Swift, shared UI package or app build artifacts. Its HTML, CSS and JavaScript remain owned and deployed by this repository. Native iOS message composition and appointment notifications remain app-specific. No form backend, SMS vendor or lead database has been added.
 
+## V28 launch treatment
+
+- Reworked the one-per-tab website launch treatment around the throwing-star mark.
+- Removed the oversized duplicate red slash and the visible square image canvas.
+- Added a restrained halo, target orbit and animated slash precisely aligned to the diagonal inside the mosquito symbol while reducing the total overlay time.
+- Kept the mark at a sharper display size and added phone and landscape safeguards plus reduced-motion behavior.
+- Synchronized the JavaScript cache version across every public page and the branded 404 page.
+
 Verification: `python3 scripts/check-seo.py`, `node --check website-tools.js`, `node --check mosquito-ninja-v12.js`, `node --test scripts/test-website-tools.cjs`, and `git diff --check`. Automated interaction checks were performed in a simulated DOM; real browser/mobile/print layout checks are still required because the connected browser could not open the local preview.
