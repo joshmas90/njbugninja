@@ -9,6 +9,152 @@
   };
   const clean = value => String(value || '').trim();
 
+  function addStructuredData(id, data) {
+    if (document.getElementById(id)) return;
+    const script = document.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(data);
+    document.head.appendChild(script);
+  }
+
+  function enhanceStructuredData() {
+    const path = window.location.pathname;
+
+    if (path === '/' || path === '/index.html') {
+      addStructuredData('mn-service-catalog-schema', {
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'OfferCatalog',
+            '@id': 'https://njbugninja.com/#service-catalog',
+            name: 'Mosquito Ninja services',
+            itemListElement: [
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
+                  '@id': 'https://njbugninja.com/mosquito-control.html#service',
+                  name: 'Mosquito control',
+                  serviceType: 'Targeted outdoor mosquito control',
+                  url: 'https://njbugninja.com/mosquito-control.html',
+                  provider: { '@id': 'https://njbugninja.com/#business' },
+                  areaServed: { '@type': 'Place', name: 'South Jersey' }
+                }
+              },
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
+                  '@id': 'https://njbugninja.com/tick-control.html#service',
+                  name: 'Tick control',
+                  serviceType: 'Targeted outdoor tick control',
+                  url: 'https://njbugninja.com/tick-control.html',
+                  provider: { '@id': 'https://njbugninja.com/#business' },
+                  areaServed: { '@type': 'Place', name: 'South Jersey' }
+                }
+              },
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
+                  '@id': 'https://njbugninja.com/commercial.html#service',
+                  name: 'Commercial and government mosquito and tick control',
+                  serviceType: 'Outdoor pest control for commercial, municipal and government-managed properties',
+                  url: 'https://njbugninja.com/commercial.html',
+                  provider: { '@id': 'https://njbugninja.com/#business' },
+                  areaServed: { '@type': 'Place', name: 'South Jersey' }
+                }
+              }
+            ]
+          },
+          {
+            '@type': 'ContactPoint',
+            '@id': 'https://njbugninja.com/#contact',
+            telephone: '+1-609-313-6317',
+            contactType: 'customer service',
+            areaServed: 'US-NJ',
+            availableLanguage: ['English']
+          }
+        ]
+      });
+    }
+
+    if (path === '/faq.html') {
+      addStructuredData('mn-faq-schema', {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        '@id': 'https://njbugninja.com/faq.html#faq',
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: 'Do you treat mosquitoes and ticks?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Yes. Mosquito control and tick control are the core outdoor services. Tell us about both concerns when requesting a quote so the property can be discussed as a whole.'
+            }
+          },
+          {
+            '@type': 'Question',
+            name: 'Which parts of New Jersey do you serve?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'The current focus is South Jersey. Send your town or ZIP code to confirm route coverage and scheduling for your property.'
+            }
+          },
+          {
+            '@type': 'Question',
+            name: 'How do I request a quote?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Call or text Mosquito Ninja at 609-313-6317, or use the homepage quote form. Include your town or ZIP code, the service you need and a short description of the property.'
+            }
+          },
+          {
+            '@type': 'Question',
+            name: 'Who handles the quote and the treatment?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Mosquito Ninja is owner-operated, so one point of contact handles both the property discussion and the work.'
+            }
+          },
+          {
+            '@type': 'Question',
+            name: 'When can people and pets use the yard again?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Re-entry depends on the product and application used. Follow the product-specific instructions provided in writing for your visit.'
+            }
+          },
+          {
+            '@type': 'Question',
+            name: 'Do you guarantee zero mosquitoes or ticks?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'No. Outdoor pest pressure changes with weather, habitat and neighboring properties. Service is focused on reducing the pest problem without promising complete elimination.'
+            }
+          },
+          {
+            '@type': 'Question',
+            name: 'How often will my property need service?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Timing depends on your property, pest activity and the treatment used. The recommended schedule is discussed when you request a quote.'
+            }
+          },
+          {
+            '@type': 'Question',
+            name: 'Do you treat commercial outdoor spaces?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Yes. Commercial service covers outdoor business spaces such as dining patios, event lawns, pool surroundings and courtyards.'
+            }
+          }
+        ]
+      });
+    }
+  }
+
   function buildQuote(values) {
     return `Hi Mosquito Ninja, I'd like a property quote.\n\n` +
       `Name: ${clean(values.name)}\nPhone: ${clean(values.phone)}\n` +
@@ -32,7 +178,6 @@
         throw new Error('Invalid ZIP rules');
       }
     }
-    // Exclusions win if a ZIP accidentally appears in both lists, as in the app.
     if (zip && (rule.excludedZIPs || []).includes(zip)) return 'outside';
     if (zip && (rule.includedZIPs || []).includes(zip)) return 'covered';
     return rule.status;
@@ -40,6 +185,8 @@
 
   if (typeof module !== 'undefined' && module.exports) module.exports = { buildQuote, evaluateCoverage };
   if (typeof document === 'undefined') return;
+
+  enhanceStructuredData();
 
   const form = document.querySelector('#quote-form');
   if (form) {
@@ -73,7 +220,6 @@
       event.preventDefault();
       const message = preparedRequest();
       if (!message) return;
-      // Browsers cannot observe SMS send/delivery results. Never show a sent confirmation.
       status.textContent = 'Your request is prepared. Tap Send in your messaging app to finish. If it does not open, use Copy request below.';
       window.location.href = `sms:+16093136317?&body=${encodeURIComponent(message)}`;
     });
