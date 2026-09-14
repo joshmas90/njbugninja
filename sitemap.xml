@@ -49,5 +49,11 @@
       <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
     </image:image>
   </url>
-  <url><loc>https://njbugninja.com/service-prep.html</loc><lastmod>2026-09-14</lastmod></url>
+  <url>
+    <loc>https://njbugninja.com/service-prep.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <image:image>
+      <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
+    </image:image>
+  </url>
 </urlset>
