@@ -1,3 +1,6 @@
+# Explicit UTF-8 response charset prevents browser/server encoding drift.
+AddDefaultCharset UTF-8
+
 # Hostinger already enforces HTTPS. Consolidate the remaining duplicate URLs.
 <IfModule mod_rewrite.c>
   RewriteEngine On

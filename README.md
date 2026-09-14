@@ -26,3 +26,11 @@ After deployment, use the domain's verified Google Search Console property to su
 Manage an actual Google Business Profile using the confirmed business details and service area. No profile, review, address, opening hours or verification status has been invented by this update.
 
 Google references: [canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), and [structured data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies).
+
+## V24 production repair
+- Repaired text encoding corruption on every HTML page.
+- Converted smart apostrophes, arrows, and copyright symbols to HTML entities for deployment safety.
+- Added an explicit UTF-8 server charset fallback.
+- Consolidated the accessibility/premium overrides into `mosquito-ninja-v24-refined.css`.
+- Fixed all inline SVG icons so they render as restrained red/green line icons rather than black fills.
+- Removed the malformed V22/V23 experimental override files.

@@ -111,4 +111,68 @@ p,li{text-wrap:pretty}
     animation-iteration-count:1!important;
   }
 }
-\n\n/* V22 premium brand-first refinement */\n.hero-actions{gap:12px;align-items:stretch}\n.hero-actions .btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center;letter-spacing:.08em}\n.hero-actions .btn.ghost{min-width:184px;border-color:rgba(255,255,255,.34);background:rgba(6,8,7,.38);box-shadow:inset 0 0 0 1px rgba(255,255,255,.025);backdrop-filter:blur(8px)}\n.hero-actions .btn.ghost:hover{border-color:rgba(224,32,39,.9);background:rgba(224,32,39,.08);color:#fff;transform:translateY(-1px)}\n.trust-grid>div:not(.trust-title){position:relative}\n.trust-grid b{letter-spacing:.055em}\n.trust-icon,.icon-ring,.benefit-icon{font-family:Inter,system-ui,sans-serif;font-weight:800;display:inline-grid;place-items:center}\n.footer h4{letter-spacing:.12em}\n.footer-phone{letter-spacing:.03em}\n.callout{border-color:rgba(255,255,255,.16);box-shadow:0 20px 44px rgba(0,0,0,.12)}\n.quote-form input,.quote-form select,.quote-form textarea{border-color:rgba(20,25,22,.18);transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease}\n.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:rgba(200,29,36,.7);box-shadow:0 0 0 3px rgba(200,29,36,.08);background:#fff}\n@media(max-width:640px){.hero-actions{display:grid;grid-template-columns:1fr 1fr}.hero-actions .btn.ghost{min-width:0}.hero-actions .btn{padding-left:12px;padding-right:12px}}\n\n.mn-icon{width:1.35em;height:1.35em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:block}\n.trust-icon .mn-icon{width:20px;height:20px}\n.icon-ring .mn-icon{width:24px;height:24px}\n.benefit-icon .mn-icon{width:24px;height:24px}\n
+
+/* V24 production refinement: brand-first, stable, and intentionally restrained. */
+.hero-actions{gap:12px;align-items:stretch}
+.hero-actions .btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center;letter-spacing:.08em}
+.hero-actions .btn.ghost{min-width:184px;border-color:rgba(255,255,255,.34);background:rgba(6,8,7,.38);box-shadow:inset 0 0 0 1px rgba(255,255,255,.025);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.hero-actions .btn.ghost:hover{border-color:rgba(224,32,39,.9);background:rgba(224,32,39,.08);color:#fff;transform:translateY(-1px)}
+.trust-grid>div:not(.trust-title){position:relative}
+.trust-grid b{letter-spacing:.055em}
+.footer h4{letter-spacing:.12em}
+.footer-phone{letter-spacing:.03em}
+.callout{border-color:rgba(255,255,255,.16);box-shadow:0 20px 44px rgba(0,0,0,.12)}
+.quote-form input,.quote-form select,.quote-form textarea{border-color:rgba(255,255,255,.15);transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:rgba(224,32,39,.78);box-shadow:0 0 0 3px rgba(224,32,39,.10);background:#111612;color:#fff}
+
+/* Premium line-icon system. Explicitly override SVG defaults so no icon can render as a black fill. */
+.mn-icon,.mn-icon *{
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;
+}
+.mn-icon{display:block;width:1.35em;height:1.35em}
+.trust-icon,.icon-ring,.benefit-icon{font-family:Inter,system-ui,sans-serif;display:inline-grid;place-items:center}
+
+/* Dark trust rail: technical green outline icons, never black blocks. */
+.trust-icon{color:#9bc53d!important}
+.trust-icon .mn-icon{width:20px;height:20px}
+
+/* Service cards: quiet brand-colored linework with a subtle tinted ring. */
+.icon-ring{
+  width:50px;height:50px;border-radius:50%;
+  display:grid;place-items:center;
+  transition:border-color .2s ease,background-color .2s ease,color .2s ease,transform .2s ease;
+}
+.icon-ring .mn-icon{width:23px;height:23px}
+.cards .card:nth-child(1) .icon-ring{color:#c81d24!important;border-color:rgba(200,29,36,.30)!important;background:rgba(200,29,36,.055)}
+.cards .card:nth-child(2) .icon-ring{color:#668a1d!important;border-color:rgba(102,138,29,.34)!important;background:rgba(102,138,29,.065)}
+.cards .dark-card .icon-ring{color:#9bc53d!important;border-color:rgba(155,197,61,.30)!important;background:rgba(155,197,61,.055)}
+.card:hover .icon-ring{transform:translateY(-2px)}
+
+/* Benefits: small premium badges instead of heavy black glyphs. */
+.benefit-icon{
+  width:36px;height:36px;border-radius:50%;
+  color:#c81d24!important;
+  background:rgba(200,29,36,.055);
+  border:1px solid rgba(200,29,36,.18);
+}
+.benefit-icon .mn-icon{width:21px;height:21px}
+.benefits>div:nth-child(2) .benefit-icon{color:#668a1d!important;background:rgba(102,138,29,.06);border-color:rgba(102,138,29,.20)}
+.benefits>div:nth-child(3) .benefit-icon{color:#c81d24!important}
+
+@media(hover:hover){
+  .cards .card:nth-child(1):hover .icon-ring{border-color:rgba(200,29,36,.48)!important;background:rgba(200,29,36,.08)}
+  .cards .card:nth-child(2):hover .icon-ring{border-color:rgba(102,138,29,.50)!important;background:rgba(102,138,29,.09)}
+  .cards .dark-card:hover .icon-ring{border-color:rgba(155,197,61,.48)!important;background:rgba(155,197,61,.09)}
+}
+
+@media(max-width:640px){
+  .hero-actions{display:grid;grid-template-columns:1fr 1fr}
+  .hero-actions .btn.ghost{min-width:0}
+  .hero-actions .btn{padding-left:12px;padding-right:12px}
+}
+
