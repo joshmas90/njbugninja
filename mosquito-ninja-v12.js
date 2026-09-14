@@ -11,7 +11,7 @@ const ensureHeadLink = (rel, href, attrs = {}) => {
   document.head.appendChild(link);
 };
 
-ensureHeadLink('stylesheet', '/mosquito-ninja-v21-fixes.css?v=21.0.0');
+ensureHeadLink('stylesheet', '/mosquito-ninja-v22-premium.css?v=22.0.0');
 ensureHeadLink('manifest', '/site.webmanifest');
 
 const y = document.querySelector('#year');
@@ -69,7 +69,7 @@ if (form) {
 
     const d = new FormData(form);
     const msg =
-      `Hi Josh, I'd like a Mosquito Ninja quote.\n\n` +
+      `Hi Mosquito Ninja, I'd like a property quote.\n\n` +
       `Name: ${d.get('name') || ''}\n` +
       `Phone: ${d.get('phone') || ''}\n` +
       `Town/ZIP: ${d.get('location') || ''}\n` +
