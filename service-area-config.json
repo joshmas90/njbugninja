@@ -1,71 +1,48 @@
 {
-    "version":  1,
-    "state":  "NJ",
-    "defaultStatus":  "outside",
-    "notes":  "covered = yes; confirm = route confirmation needed; outside = no. ZIP overrides take priority over county status.",
-    "counties":  {
-                     "atlantic":  {
-                                      "status":  "confirm",
-                                      "includedZIPs":  [
-
-                                                       ],
-                                      "excludedZIPs":  [
-
-                                                       ]
-                                  },
-                     "burlington":  {
-                                        "status":  "confirm",
-                                        "includedZIPs":  [
-
-                                                         ],
-                                        "excludedZIPs":  [
-
-                                                         ]
-                                    },
-                     "camden":  {
-                                    "status":  "confirm",
-                                    "includedZIPs":  [
-
-                                                     ],
-                                    "excludedZIPs":  [
-
-                                                     ]
-                                },
-                     "cape may":  {
-                                      "status":  "confirm",
-                                      "includedZIPs":  [
-
-                                                       ],
-                                      "excludedZIPs":  [
-
-                                                       ]
-                                  },
-                     "cumberland":  {
-                                        "status":  "confirm",
-                                        "includedZIPs":  [
-
-                                                         ],
-                                        "excludedZIPs":  [
-
-                                                         ]
-                                    },
-                     "gloucester":  {
-                                        "status":  "confirm",
-                                        "includedZIPs":  [
-
-                                                         ],
-                                        "excludedZIPs":  [
-
-                                                         ]
-                                    },
-                     "salem":  {
-                                   "status":  "confirm",
-                                   "includedZIPs":  [
-
-                                                    ],
-                                   "excludedZIPs":  [
-
-                                                    ]
-                               }
-                 }
+  "version": 2,
+  "state": "NJ",
+  "defaultStatus": "outside",
+  "notes": "Launch territory centered on Atco, NJ 08004. covered = normal core service area; confirm = route/schedule confirmation needed; outside = not normally serviced. ZIP overrides take priority over county status.",
+  "counties": {
+    "atlantic": {
+      "status": "confirm",
+      "includedZIPs": [],
+      "excludedZIPs": []
+    },
+    "burlington": {
+      "status": "covered",
+      "includedZIPs": [],
+      "excludedZIPs": []
+    },
+    "camden": {
+      "status": "covered",
+      "includedZIPs": [],
+      "excludedZIPs": []
+    },
+    "cape may": {
+      "status": "outside",
+      "includedZIPs": [],
+      "excludedZIPs": []
+    },
+    "cumberland": {
+      "status": "confirm",
+      "includedZIPs": [],
+      "excludedZIPs": []
+    },
+    "gloucester": {
+      "status": "covered",
+      "includedZIPs": [],
+      "excludedZIPs": []
+    },
+    "ocean": {
+      "status": "outside",
+      "includedZIPs": [],
+      "excludedZIPs": []
+    },
+    "salem": {
+      "status": "confirm",
+      "includedZIPs": [],
+      "excludedZIPs": []
+    }
+  }
 }
