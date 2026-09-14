@@ -12,6 +12,77 @@ const ensureHeadLink = (rel, href, attrs = {}) => {
 
 ensureHeadLink('manifest', '/site.webmanifest');
 
+// Website-optimized counterpart to the native app launch overlay. It preserves
+// the same mark / brand / red slash language, but runs only once per browser tab
+// session and clears much faster than the app splash so navigation and CWV are
+// not repeatedly penalized.
+(() => {
+  const storageKey = 'mn-launch-splash-v1';
+  let seen = false;
+  try {
+    seen = sessionStorage.getItem(storageKey) === '1';
+    if (!seen) sessionStorage.setItem(storageKey, '1');
+  } catch {
+    // Storage may be unavailable in hardened/private browsing. Showing once on
+    // this page is preferable to breaking the launch experience.
+  }
+  if (seen || !document.body) return;
+
+  const style = document.createElement('style');
+  style.id = 'mn-launch-splash-styles';
+  style.textContent = `
+    .mn-launch-overlay{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:#060807;opacity:1;visibility:visible;transition:opacity .26s ease,visibility .26s ease;color:#fff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;isolation:isolate;overflow:hidden}
+    .mn-launch-overlay::before{content:"";position:absolute;inset:-22%;background:radial-gradient(circle at 50% 48%,rgba(224,32,39,.12),transparent 34%),radial-gradient(circle at 50% 48%,rgba(224,32,39,.06),transparent 48%);opacity:0;transform:scale(.86);transition:opacity .5s ease,transform .62s cubic-bezier(.2,.8,.2,1)}
+    .mn-launch-inner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(86vw,420px);padding:24px;text-align:center;transform:translateY(-1vh)}
+    .mn-launch-mark-wrap{position:relative;width:min(64vw,276px);aspect-ratio:1;display:grid;place-items:center}
+    .mn-launch-mark{display:block;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(.92);filter:drop-shadow(0 12px 28px rgba(0,0,0,.42));transition:opacity .36s ease,transform .46s cubic-bezier(.16,.84,.32,1.08)}
+    .mn-launch-glow,.mn-launch-slash{position:absolute;left:50%;top:50%;width:145%;height:16px;border-radius:999px;transform-origin:left center;transform:translate(-50%,35%) rotate(-30deg) scaleX(0);transition:transform .34s cubic-bezier(.12,.72,.24,1);pointer-events:none}
+    .mn-launch-glow{height:18px;background:rgba(224,32,39,.42);filter:blur(10px);box-shadow:0 0 26px rgba(224,32,39,.78)}
+    .mn-launch-slash{height:5px;background:#e02027;box-shadow:0 0 6px rgba(224,32,39,.68),0 0 18px rgba(224,32,39,.45)}
+    .mn-launch-brand{margin-top:21px;font-size:19px;line-height:1.1;font-weight:900;letter-spacing:.035em;opacity:0;transform:translateY(5px);transition:opacity .34s ease .06s,transform .34s ease .06s}
+    .mn-launch-detail{margin-top:7px;font-size:9px;line-height:1.4;font-weight:800;letter-spacing:.14em;color:rgba(255,255,255,.52);opacity:0;transform:translateY(5px);transition:opacity .34s ease .09s,transform .34s ease .09s}
+    .mn-launch-overlay.is-active::before{opacity:1;transform:scale(1)}
+    .mn-launch-overlay.is-active .mn-launch-mark{opacity:1;transform:scale(1)}
+    .mn-launch-overlay.is-active .mn-launch-glow,.mn-launch-overlay.is-active .mn-launch-slash{transform:translate(-50%,35%) rotate(-30deg) scaleX(1)}
+    .mn-launch-overlay.is-active .mn-launch-brand,.mn-launch-overlay.is-active .mn-launch-detail{opacity:1;transform:translateY(0)}
+    .mn-launch-overlay.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+    @media(max-width:520px){.mn-launch-mark-wrap{width:min(68vw,250px)}.mn-launch-inner{transform:translateY(-2vh)}.mn-launch-brand{font-size:18px}.mn-launch-detail{font-size:8px;letter-spacing:.12em}}
+    @media(prefers-reduced-motion:reduce){.mn-launch-overlay,.mn-launch-overlay::before,.mn-launch-mark,.mn-launch-glow,.mn-launch-slash,.mn-launch-brand,.mn-launch-detail{transition:none!important;animation:none!important}.mn-launch-mark,.mn-launch-brand,.mn-launch-detail{opacity:1!important;transform:none!important}.mn-launch-glow,.mn-launch-slash{transform:translate(-50%,35%) rotate(-30deg) scaleX(1)!important}.mn-launch-overlay::before{opacity:1;transform:none}}
+  `;
+  document.head.appendChild(style);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'mn-launch-overlay';
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.innerHTML = `
+    <div class="mn-launch-inner">
+      <div class="mn-launch-mark-wrap">
+        <img class="mn-launch-mark" src="/assets/mark-v20.webp" alt="" width="276" height="276" decoding="async">
+        <span class="mn-launch-glow"></span>
+        <span class="mn-launch-slash"></span>
+      </div>
+      <div class="mn-launch-brand">MOSQUITO NINJA</div>
+      <div class="mn-launch-detail">MOSQUITOES. TICKS. CONSIDER THEM WARNED.</div>
+    </div>`;
+
+  const previousOverflow = document.documentElement.style.overflow;
+  document.documentElement.style.overflow = 'hidden';
+  document.body.prepend(overlay);
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('is-active')));
+
+  const visibleFor = reducedMotion ? 420 : 1380;
+  window.setTimeout(() => {
+    overlay.classList.add('is-leaving');
+    document.documentElement.style.overflow = previousOverflow;
+    window.setTimeout(() => {
+      overlay.remove();
+      style.remove();
+    }, reducedMotion ? 20 : 300);
+  }, visibleFor);
+})();
+
 const addJsonLd = (id, data) => {
   if (!document.head || document.getElementById(id)) return;
   const script = document.createElement('script');
