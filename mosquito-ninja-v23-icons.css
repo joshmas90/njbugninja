@@ -1,0 +1,106 @@
+﻿/* Mosquito Ninja V23 — premium icon system */
+
+.mn-icon {
+    display: block;
+    width: 1.35em;
+    height: 1.35em;
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Trust strip — crisp green technical linework */
+.trust-icon {
+    color: #8fbd2e !important;
+}
+
+.trust-icon .mn-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Service cards */
+.icon-ring {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition:
+        border-color .2s ease,
+        background-color .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+.icon-ring .mn-icon {
+    width: 23px;
+    height: 23px;
+}
+
+/* Mosquito — red */
+.cards .card:nth-child(1) .icon-ring {
+    color: #c81d24 !important;
+    border-color: rgba(200,29,36,.30) !important;
+    background: rgba(200,29,36,.055);
+}
+
+/* Tick — green */
+.cards .card:nth-child(2) .icon-ring {
+    color: #668a1d !important;
+    border-color: rgba(111,148,31,.34) !important;
+    background: rgba(111,148,31,.065);
+}
+
+/* Commercial — illuminated green against black */
+.cards .dark-card .icon-ring {
+    color: #9bc53d !important;
+    border-color: rgba(155,197,61,.30) !important;
+    background: rgba(155,197,61,.055);
+}
+
+.card:hover .icon-ring {
+    transform: translateY(-2px);
+}
+
+/* Why Mosquito Ninja — no heavy black glyphs */
+.benefit-icon {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    color: #c81d24 !important;
+}
+
+.benefit-icon .mn-icon {
+    width: 23px;
+    height: 23px;
+}
+
+.benefits > div:nth-child(2) .benefit-icon {
+    color: #668a1d !important;
+}
+
+.benefits > div:nth-child(3) .benefit-icon {
+    color: #c81d24 !important;
+}
+
+/* Preserve sophistication: no cartoonish saturation */
+@media (hover:hover) {
+    .cards .card:nth-child(1):hover .icon-ring {
+        border-color: rgba(200,29,36,.48) !important;
+        background: rgba(200,29,36,.08);
+    }
+
+    .cards .card:nth-child(2):hover .icon-ring {
+        border-color: rgba(111,148,31,.50) !important;
+        background: rgba(111,148,31,.09);
+    }
+
+    .cards .dark-card:hover .icon-ring {
+        border-color: rgba(155,197,61,.48) !important;
+        background: rgba(155,197,61,.09);
+    }
+}
