@@ -1,0 +1,71 @@
+{
+    "version":  1,
+    "state":  "NJ",
+    "defaultStatus":  "outside",
+    "notes":  "covered = yes; confirm = route confirmation needed; outside = no. ZIP overrides take priority over county status.",
+    "counties":  {
+                     "atlantic":  {
+                                      "status":  "confirm",
+                                      "includedZIPs":  [
+
+                                                       ],
+                                      "excludedZIPs":  [
+
+                                                       ]
+                                  },
+                     "burlington":  {
+                                        "status":  "confirm",
+                                        "includedZIPs":  [
+
+                                                         ],
+                                        "excludedZIPs":  [
+
+                                                         ]
+                                    },
+                     "camden":  {
+                                    "status":  "confirm",
+                                    "includedZIPs":  [
+
+                                                     ],
+                                    "excludedZIPs":  [
+
+                                                     ]
+                                },
+                     "cape may":  {
+                                      "status":  "confirm",
+                                      "includedZIPs":  [
+
+                                                       ],
+                                      "excludedZIPs":  [
+
+                                                       ]
+                                  },
+                     "cumberland":  {
+                                        "status":  "confirm",
+                                        "includedZIPs":  [
+
+                                                         ],
+                                        "excludedZIPs":  [
+
+                                                         ]
+                                    },
+                     "gloucester":  {
+                                        "status":  "confirm",
+                                        "includedZIPs":  [
+
+                                                         ],
+                                        "excludedZIPs":  [
+
+                                                         ]
+                                    },
+                     "salem":  {
+                                   "status":  "confirm",
+                                   "includedZIPs":  [
+
+                                                    ],
+                                   "excludedZIPs":  [
+
+                                                    ]
+                               }
+                 }
+}
