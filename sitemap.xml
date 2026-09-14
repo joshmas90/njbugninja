@@ -2,51 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://njbugninja.com/</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://njbugninja.com/mosquito-control.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://njbugninja.com/tick-control.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://njbugninja.com/commercial.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://njbugninja.com/service-area.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://njbugninja.com/faq.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://njbugninja.com/privacy.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg</image:loc>
     </image:image>
   </url>
+  <url><loc>https://njbugninja.com/service-prep.html</loc><lastmod>2026-09-14</lastmod></url>
 </urlset>

@@ -1,6 +1,5 @@
-// Mosquito Ninja V21 runtime refinements.
-// Loads the corrective stylesheet site-wide without requiring duplicate edits
-// across every static HTML page.
+// Website navigation runtime. Quote, coverage and preparation interactions
+// are implemented independently in website-tools.js.
 
 const ensureHeadLink = (rel, href, attrs = {}) => {
   if (!document.head || document.querySelector(`link[rel="${rel}"][href="${href}"]`)) return;
@@ -11,7 +10,6 @@ const ensureHeadLink = (rel, href, attrs = {}) => {
   document.head.appendChild(link);
 };
 
-ensureHeadLink('stylesheet', '/mosquito-ninja-v22-premium.css?v=22.0.0');
 ensureHeadLink('manifest', '/site.webmanifest');
 
 const y = document.querySelector('#year');
@@ -45,40 +43,5 @@ if (toggle && nav) {
       setMenuOpen(false);
       toggle.focus();
     }
-  });
-}
-
-const form = document.querySelector('#quote-form');
-if (form) {
-  let status = document.querySelector('#quote-status');
-  if (!status) {
-    status = document.createElement('p');
-    status.id = 'quote-status';
-    status.className = 'quote-status';
-    status.setAttribute('role', 'status');
-    status.setAttribute('aria-live', 'polite');
-
-    const note = form.querySelector('.form-note');
-    if (note) form.insertBefore(status, note);
-    else form.appendChild(status);
-  }
-
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (!form.reportValidity()) return;
-
-    const d = new FormData(form);
-    const msg =
-      `Hi Mosquito Ninja, I'd like a property quote.\n\n` +
-      `Name: ${d.get('name') || ''}\n` +
-      `Phone: ${d.get('phone') || ''}\n` +
-      `Town/ZIP: ${d.get('location') || ''}\n` +
-      `Service: ${d.get('service') || ''}\n` +
-      `Property: ${d.get('message') || ''}`;
-
-    status.textContent =
-      'Opening your messaging app. If it does not open, call or text 609-313-6317 directly.';
-
-    window.location.href = `sms:+16093136317?&body=${encodeURIComponent(msg)}`;
   });
 }

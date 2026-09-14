@@ -34,3 +34,16 @@ Google references: [canonical URLs](https://developers.google.com/search/docs/cr
 - Consolidated the accessibility/premium overrides into `mosquito-ninja-v24-refined.css`.
 - Fixed all inline SVG icons so they render as restrained red/green line icons rather than black fills.
 - Removed the malformed V22/V23 experimental override files.
+
+## Independent website strengths update
+
+- Preserves the website hero, red/green brand, paper sections, service pages, SEO structure and static Hostinger deployment.
+- Adds an independently authored, printable before/after-service checklist at `/service-prep.html`, linked from the homepage process, FAQs, service pages and footer. Checkmarks are temporary.
+- Adds a manual county/optional ZIP checker against this site's existing `service-area-config.json`, with current-rule loading, overrides, error/retry and direct quote continuation. No geolocation permission is requested.
+- Strengthens required contact fields, phone validation, service preselection and truthful text-handoff feedback. Explicit Copy request works on computers; a selectable-text fallback remains when clipboard access fails.
+- Mobile quick actions make Call and Quote available together.
+- Removes the runtime request for the deleted V22 stylesheet.
+
+This website does not import any app source, Swift, shared UI package or app build artifacts. Its HTML, CSS and JavaScript remain owned and deployed by this repository. Native iOS message composition and appointment notifications remain app-specific. No form backend, SMS vendor or lead database has been added.
+
+Verification: `python3 scripts/check-seo.py`, `node --check website-tools.js`, `node --check mosquito-ninja-v12.js`, `node --test scripts/test-website-tools.cjs`, and `git diff --check`. Automated interaction checks were performed in a simulated DOM; real browser/mobile/print layout checks are still required because the connected browser could not open the local preview.
