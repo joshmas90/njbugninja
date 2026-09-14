@@ -12,6 +12,43 @@ const ensureHeadLink = (rel, href, attrs = {}) => {
 
 ensureHeadLink('manifest', '/site.webmanifest');
 
+const addJsonLd = (id, data) => {
+  if (!document.head || document.getElementById(id)) return;
+  const script = document.createElement('script');
+  script.id = id;
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(data);
+  document.head.appendChild(script);
+};
+
+// The homepage already declares LocalBusiness in its server-rendered graph. Other
+// pages extend the shared #business entity with accurate service-area detail.
+if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
+  addJsonLd('mn-local-business-schema', {
+    '@context': 'https://schema.org',
+    '@type': ['Organization', 'LocalBusiness'],
+    '@id': 'https://njbugninja.com/#business',
+    name: 'Mosquito Ninja',
+    alternateName: 'NJ Bug Ninja',
+    url: 'https://njbugninja.com/',
+    telephone: '+1-609-313-6317',
+    email: 'service@njbugninja.com',
+    areaServed: [
+      { '@type': 'AdministrativeArea', name: 'Burlington County, New Jersey' },
+      { '@type': 'AdministrativeArea', name: 'Camden County, New Jersey' },
+      { '@type': 'AdministrativeArea', name: 'Gloucester County, New Jersey' }
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+1-609-313-6317',
+      email: 'service@njbugninja.com',
+      contactType: 'customer service',
+      areaServed: 'US-NJ',
+      availableLanguage: ['English']
+    }
+  });
+}
+
 const y = document.querySelector('#year');
 if (y) y.textContent = new Date().getFullYear();
 
@@ -44,6 +81,42 @@ if (toggle && nav) {
       toggle.focus();
     }
   });
+}
+
+// Analytics-ready, privacy-conscious event hooks. These do not transmit data by
+// themselves. If a first-party analytics layer is added later, it can listen to
+// the custom event or an existing dataLayer without changing the customer flow.
+const emitSiteEvent = (eventName, detail = {}) => {
+  const payload = {
+    event: eventName,
+    page_path: window.location.pathname,
+    ...detail
+  };
+  if (Array.isArray(window.dataLayer)) window.dataLayer.push(payload);
+  document.dispatchEvent(new CustomEvent('mosquitoNinja:site-event', { detail: payload }));
+};
+
+let quoteStarted = false;
+document.addEventListener('input', event => {
+  if (!quoteStarted && event.target && event.target.closest && event.target.closest('#quote-form')) {
+    quoteStarted = true;
+    emitSiteEvent('quote_form_start');
+  }
+}, { passive: true });
+
+document.addEventListener('click', event => {
+  const link = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+  if (!link) return;
+  const href = link.getAttribute('href') || '';
+  if (href.startsWith('tel:')) emitSiteEvent('click_to_call');
+  else if (href.startsWith('sms:')) emitSiteEvent('click_to_text');
+  else if (href.startsWith('mailto:')) emitSiteEvent('click_to_email');
+  else if (href.includes('#quote')) emitSiteEvent('quote_cta_click');
+});
+
+const coverageFormForTracking = document.querySelector('#coverage-form');
+if (coverageFormForTracking) {
+  coverageFormForTracking.addEventListener('submit', () => emitSiteEvent('service_area_check'));
 }
 
 // The quote form now emails Mosquito Ninja directly. This capture-phase handler
@@ -82,6 +155,7 @@ if (quoteForm) {
 
     if (!quoteForm.reportValidity() || !submitButton) {
       if (status) status.textContent = 'Please check the highlighted contact details.';
+      emitSiteEvent('quote_form_validation_error');
       return;
     }
 
@@ -111,9 +185,11 @@ if (quoteForm) {
       if (!response.ok || !result.ok) throw new Error(result.message || 'Quote delivery failed');
 
       if (status) status.textContent = result.message || 'Request sent. Mosquito Ninja will follow up using the phone number you provided.';
+      emitSiteEvent('quote_form_success', { service: payload.service || 'unknown' });
       quoteForm.reset();
       if (phone) phone.removeAttribute('aria-invalid');
     } catch (error) {
+      emitSiteEvent('quote_form_error');
       if (status) {
         status.textContent = error && error.name === 'AbortError'
           ? 'The request took too long to send. Please use Copy request or call/text 609-313-6317.'
