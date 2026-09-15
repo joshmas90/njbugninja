@@ -64,3 +64,10 @@ Verification: `python3 scripts/check-seo.py`, `node --check website-tools.js`, `
 - Elevates service cards, process steps, benefits, FAQs, the quote form, coverage checker, preparation checklist, calls to action and footer feedback without changing factual service claims or SEO content.
 - Adds progressive IntersectionObserver reveals. Content remains visible if JavaScript is unavailable, and motion is disabled when the operating system requests reduced motion.
 - Loads the final refinement layer and V29 JavaScript cache key on all public pages and the branded 404 page.
+
+## V30 supplied brand lockup
+
+- Replaces the splash's typed company name and former tagline with the exact metallic `MOSQUITO NINJA` and red `BITE BACK!` artwork supplied for the brand.
+- Uses a tightly cropped, 20 KB WebP derivative rather than loading the 2.4 MB square source image during launch.
+- Reveals the lockup with a centered cinematic wipe after the throwing-star impact and aligned slash animation.
+- Bumps the one-per-tab storage key and JavaScript cache version so the revised treatment is shown after deployment.

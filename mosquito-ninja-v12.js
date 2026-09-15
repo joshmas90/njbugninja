@@ -17,7 +17,7 @@ ensureHeadLink('manifest', '/site.webmanifest');
 // session and clears much faster than the app splash so navigation and CWV are
 // not repeatedly penalized.
 (() => {
-  const storageKey = 'mn-launch-splash-v3';
+  const storageKey = 'mn-launch-splash-v4';
   let seen = false;
   try {
     seen = sessionStorage.getItem(storageKey) === '1';
@@ -28,13 +28,18 @@ ensureHeadLink('manifest', '/site.webmanifest');
   }
   if (seen || !document.body) return;
 
+  ensureHeadLink('preload', '/assets/splash-wordmark-v30.webp', {
+    as: 'image',
+    type: 'image/webp'
+  });
+
   const style = document.createElement('style');
   style.id = 'mn-launch-splash-styles';
   style.textContent = `
     .mn-launch-overlay{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:#020403;color:#fff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;isolation:isolate;overflow:hidden;opacity:1;visibility:visible;transition:opacity .36s cubic-bezier(.4,0,1,1),visibility .36s ease}
     .mn-launch-overlay::before{content:"";position:absolute;inset:-24%;background:radial-gradient(circle at 50% 47%,rgba(224,32,39,.19) 0,rgba(224,32,39,.075) 19%,transparent 42%),radial-gradient(circle at 50% 50%,rgba(143,189,46,.055),transparent 54%);opacity:0;transform:scale(.52);transition:opacity .82s ease,transform 1.3s cubic-bezier(.16,.82,.2,1)}
     .mn-launch-overlay::after{content:"";position:absolute;inset:0;opacity:.15;background-image:radial-gradient(rgba(255,255,255,.32) .45px,transparent .55px),linear-gradient(90deg,transparent 49.94%,rgba(255,255,255,.032) 50%,transparent 50.06%);background-size:7px 7px,100% 100%;-webkit-mask-image:radial-gradient(circle at center,#000,transparent 67%);mask-image:radial-gradient(circle at center,#000,transparent 67%);pointer-events:none}
-    .mn-launch-inner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(96vw,560px);padding:22px;text-align:center;transform:translateY(-1vh)}
+    .mn-launch-inner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(98vw,640px);padding:22px 10px;text-align:center;transform:translateY(-1vh)}
     .mn-launch-mark-wrap{position:relative;width:min(78vw,370px);aspect-ratio:1;display:grid;place-items:center;isolation:isolate}
     .mn-launch-aura{position:absolute;z-index:-3;inset:13%;border-radius:50%;background:rgba(224,32,39,.12);box-shadow:0 0 46px rgba(224,32,39,.28),0 0 128px rgba(224,32,39,.16),0 0 210px rgba(224,32,39,.07);opacity:0;transform:scale(.28);filter:blur(2px)}
     .mn-launch-burst{position:absolute;z-index:-2;inset:8%;border:1px solid rgba(224,32,39,.65);border-radius:50%;opacity:0;transform:scale(.2);box-shadow:0 0 26px rgba(224,32,39,.22)}
@@ -46,10 +51,9 @@ ensureHeadLink('manifest', '/site.webmanifest');
     .mn-launch-strike{position:absolute;z-index:3;left:48.5%;top:48%;width:56%;height:clamp(8px,2.6%,11px);transform:translate(-50%,-50%) rotate(-40deg);pointer-events:none}
     .mn-launch-strike::before{content:"";display:block;width:100%;height:100%;border-radius:999px;background:linear-gradient(90deg,#bb0d14 0,#e02027 32%,#ff3037 84%,#fff 100%);box-shadow:0 0 7px rgba(224,32,39,.95),0 0 24px rgba(224,32,39,.68),0 0 54px rgba(224,32,39,.32);opacity:0;transform:scaleX(0);transform-origin:left center}
     .mn-launch-strike::after{content:"";position:absolute;right:-1px;top:50%;width:16%;height:260%;border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(255,70,76,.76) 24%,transparent 70%);opacity:0;transform:translateY(-50%) scale(.25)}
-    .mn-launch-brand{margin-top:19px;font-family:"Barlow Condensed",Impact,sans-serif;font-size:clamp(28px,4.4vw,34px);line-height:1;font-weight:900;letter-spacing:.065em;opacity:0;transform:translateY(18px);filter:blur(6px)}
-    .mn-launch-brand span{color:#e02027}
-    .mn-launch-detail{margin-top:11px;font-size:9px;line-height:1.45;font-weight:800;letter-spacing:.2em;color:rgba(255,255,255,.62);opacity:0;transform:translateY(12px);filter:blur(4px)}
-    .mn-launch-rule{display:block;width:110px;height:1px;margin-top:20px;background:linear-gradient(90deg,transparent,#e02027 24%,#e02027 76%,transparent);box-shadow:0 0 10px rgba(224,32,39,.66);opacity:0;transform:scaleX(.05)}
+    .mn-launch-lockup{position:relative;width:min(96vw,610px);aspect-ratio:1000/247;margin-top:-28px;overflow:hidden;opacity:0;transform:translateY(18px) scale(.92);filter:blur(7px);clip-path:inset(0 50% 0 50%);will-change:opacity,transform,filter,clip-path}
+    .mn-launch-lockup::before{content:"";position:absolute;inset:26% 14% 5%;background:radial-gradient(ellipse,rgba(224,32,39,.18),transparent 69%);filter:blur(18px);pointer-events:none}
+    .mn-launch-lockup img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;mix-blend-mode:screen;filter:drop-shadow(0 8px 22px rgba(224,32,39,.16))}
     .mn-launch-overlay.is-active::before{opacity:1;transform:scale(1)}
     .mn-launch-overlay.is-active .mn-launch-aura{animation:mn-launch-aura 1.5s cubic-bezier(.16,.84,.2,1) .04s both}
     .mn-launch-overlay.is-active .mn-launch-burst{animation:mn-launch-burst .84s cubic-bezier(.15,.72,.15,1) .65s both}
@@ -57,9 +61,7 @@ ensureHeadLink('manifest', '/site.webmanifest');
     .mn-launch-overlay.is-active .mn-launch-mark{animation:mn-launch-mark 1.02s cubic-bezier(.14,.76,.18,1) .08s both}
     .mn-launch-overlay.is-active .mn-launch-strike::before{animation:mn-launch-strike .62s cubic-bezier(.14,.72,.18,1) .72s both}
     .mn-launch-overlay.is-active .mn-launch-strike::after{animation:mn-launch-tip .52s ease-out .78s both}
-    .mn-launch-overlay.is-active .mn-launch-brand{animation:mn-launch-copy .58s cubic-bezier(.16,.82,.2,1) .92s both}
-    .mn-launch-overlay.is-active .mn-launch-detail{animation:mn-launch-copy .56s cubic-bezier(.16,.82,.2,1) 1.07s both}
-    .mn-launch-overlay.is-active .mn-launch-rule{animation:mn-launch-rule .7s cubic-bezier(.16,.78,.2,1) 1.16s both}
+    .mn-launch-overlay.is-active .mn-launch-lockup{animation:mn-launch-lockup .86s cubic-bezier(.16,.82,.2,1) .98s both}
     .mn-launch-overlay.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
     @keyframes mn-launch-mark{0%{opacity:0;transform:scale(.32) rotate(-72deg);filter:blur(9px) drop-shadow(0 22px 46px rgba(0,0,0,.64))}46%{opacity:1;transform:scale(1.1) rotate(4deg);filter:blur(0) drop-shadow(0 22px 46px rgba(0,0,0,.64))}72%{transform:scale(.97) rotate(-1.2deg)}100%{opacity:1;transform:scale(1) rotate(0);filter:blur(0) drop-shadow(0 22px 46px rgba(0,0,0,.64))}}
     @keyframes mn-launch-aura{0%{opacity:0;transform:scale(.28)}55%{opacity:1;transform:scale(1.18)}100%{opacity:.82;transform:scale(1)}}
@@ -67,11 +69,10 @@ ensureHeadLink('manifest', '/site.webmanifest');
     @keyframes mn-launch-orbit{0%{opacity:0;transform:scale(.48) rotate(-130deg)}42%{opacity:.8}100%{opacity:.38;transform:scale(1) rotate(36deg)}}
     @keyframes mn-launch-strike{0%{opacity:0;transform:scaleX(0)}12%{opacity:1}72%{opacity:1;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1)}}
     @keyframes mn-launch-tip{0%{opacity:0;transform:translateY(-50%) scale(.2)}35%{opacity:1;transform:translateY(-50%) scale(1)}100%{opacity:0;transform:translateY(-50%) scale(1.7)}}
-    @keyframes mn-launch-copy{0%{opacity:0;transform:translateY(18px);filter:blur(6px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
-    @keyframes mn-launch-rule{0%{opacity:0;transform:scaleX(.05)}100%{opacity:1;transform:scaleX(1)}}
-    @media(max-width:520px){.mn-launch-mark-wrap{width:min(88vw,348px)}.mn-launch-inner{transform:translateY(-2vh);padding-inline:12px}.mn-launch-brand{font-size:28px}.mn-launch-detail{font-size:7px;letter-spacing:.15em}.mn-launch-rule{margin-top:16px}}
-    @media(max-height:560px) and (orientation:landscape){.mn-launch-inner{transform:none}.mn-launch-mark-wrap{width:min(66vh,280px)}.mn-launch-brand{margin-top:5px;font-size:22px}.mn-launch-detail{margin-top:5px;font-size:7px}.mn-launch-rule{margin-top:8px}}
-    @media(prefers-reduced-motion:reduce){.mn-launch-overlay,.mn-launch-overlay::before,.mn-launch-aura,.mn-launch-burst,.mn-launch-orbit,.mn-launch-mark,.mn-launch-strike::before,.mn-launch-strike::after,.mn-launch-brand,.mn-launch-detail,.mn-launch-rule{transition:none!important;animation:none!important}.mn-launch-overlay::before,.mn-launch-aura,.mn-launch-orbit,.mn-launch-mark,.mn-launch-brand,.mn-launch-detail,.mn-launch-rule{opacity:1!important;transform:none!important;filter:none!important}.mn-launch-burst,.mn-launch-strike{display:none}}
+    @keyframes mn-launch-lockup{0%{opacity:0;transform:translateY(18px) scale(.92);filter:blur(7px);clip-path:inset(0 50% 0 50%)}48%{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}72%{transform:translateY(0) scale(1.025)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);clip-path:inset(0 0 0 0)}}
+    @media(max-width:520px){.mn-launch-mark-wrap{width:min(88vw,348px)}.mn-launch-inner{transform:translateY(-2vh);padding-inline:5px}.mn-launch-lockup{width:min(98vw,500px);margin-top:-22px}}
+    @media(max-height:560px) and (orientation:landscape){.mn-launch-inner{transform:none}.mn-launch-mark-wrap{width:min(60vh,260px)}.mn-launch-lockup{width:min(82vw,460px);margin-top:-26px}}
+    @media(prefers-reduced-motion:reduce){.mn-launch-overlay,.mn-launch-overlay::before,.mn-launch-aura,.mn-launch-burst,.mn-launch-orbit,.mn-launch-mark,.mn-launch-strike::before,.mn-launch-strike::after,.mn-launch-lockup{transition:none!important;animation:none!important}.mn-launch-overlay::before,.mn-launch-aura,.mn-launch-orbit,.mn-launch-mark,.mn-launch-lockup{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}.mn-launch-burst,.mn-launch-strike{display:none}}
   `;
   document.head.appendChild(style);
 
@@ -87,9 +88,9 @@ ensureHeadLink('manifest', '/site.webmanifest');
         <img class="mn-launch-mark" src="/assets/mark-v20.webp" alt="" width="370" height="370" decoding="async">
         <span class="mn-launch-strike"></span>
       </div>
-      <div class="mn-launch-brand"><span>MOSQUITO</span> NINJA</div>
-      <div class="mn-launch-detail">MOSQUITOES. TICKS. CONSIDER THEM WARNED.</div>
-      <span class="mn-launch-rule"></span>
+      <div class="mn-launch-lockup">
+        <img src="/assets/splash-wordmark-v30.webp" alt="" width="1000" height="247" decoding="async" fetchpriority="high">
+      </div>
     </div>`;
 
   const previousOverflow = document.documentElement.style.overflow;
@@ -99,7 +100,7 @@ ensureHeadLink('manifest', '/site.webmanifest');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('is-active')));
 
-  const visibleFor = reducedMotion ? 450 : 2100;
+  const visibleFor = reducedMotion ? 500 : 2350;
   window.setTimeout(() => {
     overlay.classList.add('is-leaving');
     document.documentElement.style.overflow = previousOverflow;
