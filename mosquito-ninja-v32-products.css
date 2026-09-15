@@ -1,0 +1,132 @@
+/* Mosquito Ninja V32 — professional products section.
+   Keeps product disclosure transparent without publishing rates, recipes or one-size-fits-all treatment claims. */
+
+.products-section{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 88% 18%,rgba(224,32,39,.055),transparent 25%),
+    radial-gradient(circle at 12% 82%,rgba(143,189,46,.07),transparent 26%),
+    linear-gradient(180deg,#f4f0e6,#ece6da);
+}
+.products-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.26;
+  background-image:linear-gradient(rgba(18,27,21,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(18,27,21,.045) 1px,transparent 1px);
+  background-size:48px 48px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
+}
+.products-section>.shell{position:relative;z-index:1}
+.products-intro{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);
+  gap:clamp(34px,6vw,88px);
+  align-items:end;
+  margin-bottom:42px;
+}
+.products-intro h2{margin-bottom:0}
+.products-intro>p{
+  max-width:620px;
+  margin:0 0 8px;
+  color:#39423c;
+  font-size:1.04rem;
+  line-height:1.75;
+}
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+.product-card{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:230px;
+  padding:30px;
+  border:1px solid rgba(24,34,27,.14);
+  background:rgba(255,255,255,.56);
+  box-shadow:0 16px 46px rgba(25,32,27,.055);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s ease,box-shadow .3s ease,background-color .3s ease;
+}
+.product-card::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:0;
+  left:0;
+  width:100%;
+  height:3px;
+  background:linear-gradient(90deg,var(--mn-red),rgba(224,32,39,.06));
+  transform:scaleX(.42);
+  transform-origin:left center;
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+}
+.product-card:nth-child(even)::before{background:linear-gradient(90deg,var(--mn-green),rgba(143,189,46,.06))}
+.product-card::after{
+  content:"";
+  position:absolute;
+  z-index:-2;
+  right:-74px;
+  bottom:-88px;
+  width:190px;
+  aspect-ratio:1;
+  border:1px solid rgba(224,32,39,.07);
+  border-radius:50%;
+  box-shadow:0 0 0 28px rgba(224,32,39,.018),0 0 0 56px rgba(224,32,39,.012);
+}
+.product-card:nth-child(even)::after{
+  border-color:rgba(143,189,46,.09);
+  box-shadow:0 0 0 28px rgba(143,189,46,.018),0 0 0 56px rgba(143,189,46,.012);
+}
+.product-kicker{
+  display:block;
+  margin-bottom:16px;
+  color:#6e776f;
+  font:800 .72rem/1 Inter,sans-serif;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.product-card h3{
+  margin:0 0 12px;
+  color:var(--mn-ink);
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:clamp(1.72rem,2.4vw,2.15rem);
+  font-weight:900;
+  line-height:.96;
+  letter-spacing:.015em;
+}
+.product-card p{
+  max-width:620px;
+  margin:0;
+  color:#4d5650;
+  line-height:1.7;
+}
+.product-note{
+  margin:24px 0 0;
+  padding:18px 20px;
+  border-left:2px solid var(--mn-green);
+  background:rgba(255,255,255,.38);
+  color:#4a544d;
+  font-size:.9rem;
+  line-height:1.65;
+}
+@media(hover:hover){
+  .product-card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(224,32,39,.24);
+    background:rgba(255,255,255,.76);
+    box-shadow:0 26px 64px rgba(24,31,26,.11);
+  }
+  .product-card:nth-child(even):hover{border-color:rgba(105,143,28,.28)}
+  .product-card:hover::before{transform:scaleX(1)}
+}
+@media(max-width:760px){
+  .products-intro{grid-template-columns:1fr;gap:18px;margin-bottom:28px}
+  .products-intro>p{margin:0}
+  .product-grid{grid-template-columns:1fr}
+  .product-card{min-height:0;padding:24px}
+}
