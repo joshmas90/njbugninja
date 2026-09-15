@@ -17,7 +17,7 @@ ensureHeadLink('manifest', '/site.webmanifest');
 // session and clears much faster than the app splash so navigation and CWV are
 // not repeatedly penalized.
 (() => {
-  const storageKey = 'mn-launch-splash-v4';
+  const storageKey = 'mn-launch-splash-v5';
   let seen = false;
   try {
     seen = sessionStorage.getItem(storageKey) === '1';
@@ -28,7 +28,11 @@ ensureHeadLink('manifest', '/site.webmanifest');
   }
   if (seen || !document.body) return;
 
-  ensureHeadLink('preload', '/assets/splash-wordmark-v30.webp', {
+  ensureHeadLink('preload', '/assets/mark-transparent-v31.webp', {
+    as: 'image',
+    type: 'image/webp'
+  });
+  ensureHeadLink('preload', '/assets/splash-wordmark-transparent-v31.webp', {
     as: 'image',
     type: 'image/webp'
   });
@@ -47,13 +51,13 @@ ensureHeadLink('manifest', '/site.webmanifest');
     .mn-launch-orbit::before,.mn-launch-orbit::after{content:"";position:absolute;border-radius:50%;background:#e02027;box-shadow:0 0 12px rgba(224,32,39,.8)}
     .mn-launch-orbit::before{width:7px;height:7px;left:11%;top:15%}
     .mn-launch-orbit::after{width:5px;height:5px;right:7%;bottom:24%;background:#8fbd2e;box-shadow:0 0 12px rgba(143,189,46,.8)}
-    .mn-launch-mark{display:block;width:100%;height:100%;object-fit:contain;mix-blend-mode:screen;opacity:0;transform:scale(.32) rotate(-72deg);filter:blur(9px) drop-shadow(0 22px 46px rgba(0,0,0,.64));will-change:opacity,transform,filter}
-    .mn-launch-strike{position:absolute;z-index:3;left:48.5%;top:48%;width:56%;height:clamp(8px,2.6%,11px);transform:translate(-50%,-50%) rotate(-40deg);pointer-events:none}
+    .mn-launch-mark{display:block;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(.32) rotate(-72deg);filter:blur(9px) drop-shadow(0 22px 46px rgba(0,0,0,.64));will-change:opacity,transform,filter}
+    .mn-launch-strike{position:absolute;z-index:3;left:50%;top:46.6%;width:54%;height:clamp(8px,2.6%,11px);transform:translate(-50%,-50%) rotate(-38deg);pointer-events:none}
     .mn-launch-strike::before{content:"";display:block;width:100%;height:100%;border-radius:999px;background:linear-gradient(90deg,#bb0d14 0,#e02027 32%,#ff3037 84%,#fff 100%);box-shadow:0 0 7px rgba(224,32,39,.95),0 0 24px rgba(224,32,39,.68),0 0 54px rgba(224,32,39,.32);opacity:0;transform:scaleX(0);transform-origin:left center}
     .mn-launch-strike::after{content:"";position:absolute;right:-1px;top:50%;width:16%;height:260%;border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(255,70,76,.76) 24%,transparent 70%);opacity:0;transform:translateY(-50%) scale(.25)}
-    .mn-launch-lockup{position:relative;width:min(96vw,610px);aspect-ratio:1000/247;margin-top:-28px;overflow:hidden;opacity:0;transform:translateY(18px) scale(.92);filter:blur(7px);clip-path:inset(0 50% 0 50%);will-change:opacity,transform,filter,clip-path}
+    .mn-launch-lockup{position:relative;width:min(96vw,610px);aspect-ratio:1080/361;margin-top:-34px;overflow:hidden;opacity:0;transform:translateY(18px) scale(.92);filter:blur(7px);clip-path:inset(0 50% 0 50%);will-change:opacity,transform,filter,clip-path}
     .mn-launch-lockup::before{content:"";position:absolute;inset:26% 14% 5%;background:radial-gradient(ellipse,rgba(224,32,39,.18),transparent 69%);filter:blur(18px);pointer-events:none}
-    .mn-launch-lockup img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;mix-blend-mode:screen;filter:drop-shadow(0 8px 22px rgba(224,32,39,.16))}
+    .mn-launch-lockup img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 22px rgba(224,32,39,.16))}
     .mn-launch-overlay.is-active::before{opacity:1;transform:scale(1)}
     .mn-launch-overlay.is-active .mn-launch-aura{animation:mn-launch-aura 1.5s cubic-bezier(.16,.84,.2,1) .04s both}
     .mn-launch-overlay.is-active .mn-launch-burst{animation:mn-launch-burst .84s cubic-bezier(.15,.72,.15,1) .65s both}
@@ -70,7 +74,7 @@ ensureHeadLink('manifest', '/site.webmanifest');
     @keyframes mn-launch-strike{0%{opacity:0;transform:scaleX(0)}12%{opacity:1}72%{opacity:1;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1)}}
     @keyframes mn-launch-tip{0%{opacity:0;transform:translateY(-50%) scale(.2)}35%{opacity:1;transform:translateY(-50%) scale(1)}100%{opacity:0;transform:translateY(-50%) scale(1.7)}}
     @keyframes mn-launch-lockup{0%{opacity:0;transform:translateY(18px) scale(.92);filter:blur(7px);clip-path:inset(0 50% 0 50%)}48%{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}72%{transform:translateY(0) scale(1.025)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);clip-path:inset(0 0 0 0)}}
-    @media(max-width:520px){.mn-launch-mark-wrap{width:min(88vw,348px)}.mn-launch-inner{transform:translateY(-2vh);padding-inline:5px}.mn-launch-lockup{width:min(98vw,500px);margin-top:-22px}}
+    @media(max-width:520px){.mn-launch-mark-wrap{width:min(88vw,348px)}.mn-launch-inner{transform:translateY(-2vh);padding-inline:5px}.mn-launch-lockup{width:min(98vw,500px);margin-top:-28px}}
     @media(max-height:560px) and (orientation:landscape){.mn-launch-inner{transform:none}.mn-launch-mark-wrap{width:min(60vh,260px)}.mn-launch-lockup{width:min(82vw,460px);margin-top:-26px}}
     @media(prefers-reduced-motion:reduce){.mn-launch-overlay,.mn-launch-overlay::before,.mn-launch-aura,.mn-launch-burst,.mn-launch-orbit,.mn-launch-mark,.mn-launch-strike::before,.mn-launch-strike::after,.mn-launch-lockup{transition:none!important;animation:none!important}.mn-launch-overlay::before,.mn-launch-aura,.mn-launch-orbit,.mn-launch-mark,.mn-launch-lockup{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}.mn-launch-burst,.mn-launch-strike{display:none}}
   `;
@@ -85,11 +89,11 @@ ensureHeadLink('manifest', '/site.webmanifest');
         <span class="mn-launch-aura"></span>
         <span class="mn-launch-burst"></span>
         <span class="mn-launch-orbit"></span>
-        <img class="mn-launch-mark" src="/assets/mark-v20.webp" alt="" width="370" height="370" decoding="async">
+        <img class="mn-launch-mark" src="/assets/mark-transparent-v31.webp" alt="" width="768" height="768" decoding="async" fetchpriority="high">
         <span class="mn-launch-strike"></span>
       </div>
       <div class="mn-launch-lockup">
-        <img src="/assets/splash-wordmark-v30.webp" alt="" width="1000" height="247" decoding="async" fetchpriority="high">
+        <img src="/assets/splash-wordmark-transparent-v31.webp" alt="" width="1080" height="361" decoding="async" fetchpriority="high">
       </div>
     </div>`;
 
@@ -100,7 +104,7 @@ ensureHeadLink('manifest', '/site.webmanifest');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('is-active')));
 
-  const visibleFor = reducedMotion ? 500 : 2350;
+  const visibleFor = reducedMotion ? 500 : 2500;
   window.setTimeout(() => {
     overlay.classList.add('is-leaving');
     document.documentElement.style.overflow = previousOverflow;

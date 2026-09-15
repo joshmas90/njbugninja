@@ -71,3 +71,9 @@ Verification: `python3 scripts/check-seo.py`, `node --check website-tools.js`, `
 - Uses a tightly cropped, 20 KB WebP derivative rather than loading the 2.4 MB square source image during launch.
 - Reveals the lockup with a centered cinematic wipe after the throwing-star impact and aligned slash animation.
 - Bumps the one-per-tab storage key and JavaScript cache version so the revised treatment is shown after deployment.
+
+## V31 transparent brand assets
+
+- Replaces the dark-canvas throwing-star artwork with a high-resolution alpha-transparent WebP for the splash, header and interior-page watermark.
+- Replaces the splash name and `BITE BACK!` treatment with a separate alpha-transparent lockup, eliminating the rectangular background behind the lettering.
+- Realigns the animated slash to the transparent mark's measured diagonal and bumps the one-per-tab and page cache versions.
