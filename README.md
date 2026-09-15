@@ -55,3 +55,12 @@ This website does not import any app source, Swift, shared UI package or app bui
 - Synchronized the JavaScript cache version across every public page and the branded 404 page.
 
 Verification: `python3 scripts/check-seo.py`, `node --check website-tools.js`, `node --check mosquito-ninja-v12.js`, `node --test scripts/test-website-tools.cjs`, and `git diff --check`. Automated interaction checks were performed in a simulated DOM; real browser/mobile/print layout checks are still required because the connected browser could not open the local preview.
+
+## V29 video-audit premium pass
+
+- Enlarges the launch mark from a 218px desktop maximum to 370px (about 70% larger), with phone and landscape constraints that preserve the same impact on smaller screens.
+- Rebuilds the one-per-tab opening as a staged mark arrival, orbit, pulse, correctly registered in-logo slash, wordmark and tagline reveal. Reduced-motion visitors receive a short static treatment.
+- Carries the homepage hero's visual authority through the rest of the experience with branded interior-page hero atmosphere, stronger editorial chapter hierarchy and more deliberate light/dark transitions.
+- Elevates service cards, process steps, benefits, FAQs, the quote form, coverage checker, preparation checklist, calls to action and footer feedback without changing factual service claims or SEO content.
+- Adds progressive IntersectionObserver reveals. Content remains visible if JavaScript is unavailable, and motion is disabled when the operating system requests reduced motion.
+- Loads the final refinement layer and V29 JavaScript cache key on all public pages and the branded 404 page.
