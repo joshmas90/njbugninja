@@ -2,6 +2,18 @@
 
 Static website for https://njbugninja.com, deployed from the `main` branch to Hostinger. No build step is required.
 
+## V33.7 spring CTA ember treatment
+
+- Adds a slow red ember glow beneath the Spring 2027 route-planning card and a restrained highlight sweep across its upper edge.
+- Adds a small hover/focus lift with richer red edge light while keeping the callout position and copy stable.
+- Preserves a static premium glow and removes all CTA animation when reduced motion is requested.
+
+## V33.6 theatrical first-paint splash
+
+- Adds a critical black pre-paint guard in every page head so underlying page content cannot flash before the launch overlay is mounted; a timed fallback prevents a permanent blank page if the main script fails.
+- Expands the once-per-tab brand reveal to occupy substantially more of the viewport and restores controlled cinematic scale, aura, orbit, burst and red-slash choreography.
+- Keeps the dramatic motion isolated to the launch moment. Visitors requesting reduced motion bypass the splash, while V33.4's stable anchored navigation and non-moving page sections remain unchanged.
+
 ## V33.5 seasonal CTA composition
 
 - Moves the Spring 2027 route-planning invitation out of the crowded left copy column and into the quiet lower-right area of the desktop hero artwork.
