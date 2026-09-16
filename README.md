@@ -2,6 +2,25 @@
 
 Static website for https://njbugninja.com, deployed from the `main` branch to Hostinger. No build step is required.
 
+## V33 premium video-audit pass
+
+- Makes the homepage service-area promise fully legible against the dark green section.
+- Keeps content visible throughout subtle scroll effects; reading columns and form controls remain stationary.
+- Replaces the illustrated footer treatment with the cleaner throwing-star and `MOSQUITO NINJA / BITE BACK!` lockup already used by the launch experience.
+- Restores single-column interior and coverage layouts through 980px, shortens interior heroes and section spacing, and establishes the missing product-heading scale.
+- Uses native FAQ disclosures with preserved answers and deep links; printing temporarily opens every answer and restores the prior state afterward.
+- Closes the mobile menu on outside clicks and breakpoint changes, preserves Escape-to-close, and bounds its height on short screens.
+- Loads the V33.1 stylesheet and runtime cache keys on all nine HTML pages. Footer branding uses real images with intrinsic dimensions.
+
+Verification: existing SEO/link checks and eleven quote/coverage/download tests pass. A loaded-stylesheet cascade audit passed at 320, 375, 390, 430, 640, 768, 980, 981, 1280 and 1440px. CSS and JavaScript syntax checks pass, and FAQ answer text is preserved. These are source-level checks; browser rendering is still required because the connected browser could not open the local preview. Before release, check phone/tablet/desktop scrolling, menu dismissal, FAQ keyboard/deep-link/print behavior and the existing quote success/error flow in a preview environment.
+
+## Coverage download recovery
+
+- The live Camden / 08004 check returned the correct core-coverage result during diagnosis. The deployed rules and JavaScript matched this repository; the earlier reported failure was not reproduced in that live test.
+- Rules downloads now retry once after a network, HTTP, timeout or JSON-response failure. Each attempt gets its own eight-second timeout; changing county or ZIP cancels the active request and prevents another attempt.
+- A persistent failure keeps the selected county and ZIP in the quote link and explains that the rules could not be loaded. Loading clears any previous result color. Coverage still requires a valid response; there is no guessed or cached coverage fallback.
+- All pages reference `website-tools.js?v=25.1.0`. Six download-recovery tests supplement the existing five quote/coverage tests. The recovery changes require deployment before they affect the live checker.
+
 ## September 2026 SEO update
 
 - Unique titles, descriptions and self-referencing canonical URLs for all seven public content pages.

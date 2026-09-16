@@ -178,6 +178,12 @@ if (toggle && nav) {
     link.addEventListener('click', () => setMenuOpen(false));
   });
 
+  document.addEventListener('click', event => {
+    if (!nav.contains(event.target) && !toggle.contains(event.target)) setMenuOpen(false);
+  });
+
+  window.matchMedia('(max-width: 980px)').addEventListener('change', () => setMenuOpen(false));
+
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
       setMenuOpen(false);
@@ -328,9 +334,28 @@ if (footerContact && !footerContact.querySelector('a[href="mailto:service@njbugn
   footerContact.appendChild(emailLink);
 }
 
-// Reveal major content groups as they enter the viewport. The motion-ready
-// class is only added when IntersectionObserver is available, so content is
-// never hidden when JavaScript or the observer API is unavailable.
+// Open linked FAQ answers, including links followed from another page.
+const openLinkedAnswer = () => {
+  let id;
+  try { id = decodeURIComponent(window.location.hash.slice(1)); } catch { return; }
+  const answer = document.getElementById(id);
+  if (answer?.matches('details.reference-answer')) answer.open = true;
+};
+openLinkedAnswer();
+window.addEventListener('hashchange', openLinkedAnswer);
+
+let answersClosedBeforePrint = [];
+window.addEventListener('beforeprint', () => {
+  answersClosedBeforePrint = [...document.querySelectorAll('details.reference-answer:not([open])')];
+  answersClosedBeforePrint.forEach(answer => { answer.open = true; });
+});
+window.addEventListener('afterprint', () => {
+  answersClosedBeforePrint.forEach(answer => { answer.open = false; });
+  answersClosedBeforePrint = [];
+});
+
+// Apply light motion to short visual groups. Reading columns and form controls
+// remain stationary, and the final stylesheet keeps every target visible.
 if (
   'IntersectionObserver' in window &&
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -341,10 +366,8 @@ if (
     '.process-photo',
     '.process-copy',
     '.why-grid > *',
-    '.area-grid > *',
-    '.faq-grid > *',
-    '.quote-grid > *',
-    '.content-grid > *',
+    '.area-grid .map',
+    '.product-card',
     '.cta .shell',
     '.footer-grid > *'
   ].join(','))];
@@ -353,7 +376,7 @@ if (
     document.documentElement.classList.add('mn-motion-ready');
     revealTargets.forEach((target, index) => {
       target.classList.add('mn-reveal');
-      target.style.setProperty('--mn-reveal-delay', `${Math.min(index % 3, 2) * 70}ms`);
+      target.style.setProperty('--mn-reveal-delay', `${Math.min(index % 3, 2) * 35}ms`);
     });
 
     const revealObserver = new IntersectionObserver(entries => {
@@ -362,7 +385,7 @@ if (
         entry.target.classList.add('is-revealed');
         revealObserver.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    }, { rootMargin: '0px 0px 14% 0px', threshold: 0 });
 
     revealTargets.forEach(target => revealObserver.observe(target));
   }

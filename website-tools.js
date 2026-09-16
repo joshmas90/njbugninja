@@ -183,7 +183,31 @@
     return rule.status;
   }
 
-  if (typeof module !== 'undefined' && module.exports) module.exports = { buildQuote, evaluateCoverage };
+  // Retry a failed rules download once. Each attempt has its own timeout so a
+  // timed-out attempt cannot also abort the retry. Editing the form cancels both.
+  async function loadCoverageConfig(signal, fetcher = fetch, timeoutMs = 8000) {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      if (signal?.aborted) throw new DOMException('Coverage check cancelled', 'AbortError');
+      const controller = new AbortController();
+      const cancel = () => controller.abort();
+      signal?.addEventListener('abort', cancel, { once: true });
+      const timeout = setTimeout(cancel, timeoutMs);
+      try {
+        const response = await fetcher('/service-area-config.json', {
+          cache: 'no-store', signal: controller.signal
+        });
+        if (!response.ok) throw new Error('Coverage rules unavailable');
+        return await response.json();
+      } catch (error) {
+        if (signal?.aborted || attempt === 1) throw error;
+      } finally {
+        clearTimeout(timeout);
+        signal?.removeEventListener('abort', cancel);
+      }
+    }
+  }
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = { buildQuote, evaluateCoverage, loadCoverageConfig };
   if (typeof document === 'undefined') return;
 
   enhanceStructuredData();
@@ -272,14 +296,17 @@
       button.textContent = 'CHECKING…';
       coverageForm.setAttribute('aria-busy', 'true');
       quote.hidden = true;
+      const query = new URLSearchParams();
+      if (county !== 'other') query.set('county', countyLabel + ' County');
+      if (zip) query.set('zip', zip);
+      quote.href = '/?' + query.toString() + '#quote';
+      status.removeAttribute('data-coverage');
       status.textContent = 'Checking the current service-area rules…';
       const controller = new AbortController();
       activeController = controller;
-      const timeout = setTimeout(() => controller.abort(), 8000);
       try {
-        const response = await fetch('/service-area-config.json', { cache: 'no-store', signal: controller.signal });
-        if (!response.ok) throw new Error('Coverage unavailable');
-        const result = evaluateCoverage(await response.json(), county, zip);
+        const config = await loadCoverageConfig(controller.signal);
+        const result = evaluateCoverage(config, county, zip);
         if (requestGeneration !== generation) return;
         status.dataset.coverage = result;
         status.textContent = {
@@ -287,18 +314,12 @@
           confirm: 'Route confirmation needed. Share the property town or ZIP so Mosquito Ninja can check current availability.',
           outside: 'Outside our normal service area. You can still ask Mosquito Ninja to review this property before planning a visit.'
         }[result];
-        const query = new URLSearchParams();
-        if (county !== 'other') query.set('county', countyLabel + ' County');
-        if (zip) query.set('zip', zip);
-        quote.href = '/?' + query.toString() + '#quote';
         quote.hidden = false;
       } catch {
         if (requestGeneration !== generation) return;
-        status.textContent = 'The coverage check is unavailable right now. Please try again or call/text 609-313-6317 to confirm your route.';
-        quote.href = '/#quote';
+        status.textContent = 'We couldn’t load the coverage rules. Please try again, or use Discuss this property to confirm your route. You can also call/text 609-313-6317.';
         quote.hidden = false;
       } finally {
-        clearTimeout(timeout);
         if (requestGeneration === generation) {
           button.disabled = false;
           button.textContent = 'CHECK COVERAGE';

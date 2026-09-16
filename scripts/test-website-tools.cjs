@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { buildQuote, evaluateCoverage } = require('../website-tools.js');
+const { buildQuote, evaluateCoverage, loadCoverageConfig } = require('../website-tools.js');
 const liveRules = require('../service-area-config.json');
 
 test('current configured counties retain their actual coverage', () => {
@@ -38,4 +38,74 @@ test('quote text preserves customer punctuation, Unicode and multiline property 
 test('both pests and default service have readable labels', () => {
   assert.match(buildQuote({ service: 'both' }), /Service: Mosquito & tick control/);
   assert.match(buildQuote({ service: 'invalid' }), /Service: Mosquito control/);
+});
+
+test('a temporary rules download failure retries and returns Camden coverage', async () => {
+  let requests = 0;
+  const config = await loadCoverageConfig(undefined, async () => {
+    if (++requests === 1) throw new TypeError('Failed to fetch');
+    return { ok: true, json: async () => liveRules };
+  });
+  assert.equal(requests, 2);
+  assert.equal(evaluateCoverage(config, 'Camden', '08004'), 'covered');
+});
+
+test('temporary HTTP and invalid JSON responses can recover on the retry', async () => {
+  for (const firstResponse of [
+    { ok: false },
+    { ok: true, json: async () => { throw new SyntaxError('Unexpected HTML'); } }
+  ]) {
+    let requests = 0;
+    const config = await loadCoverageConfig(undefined, async () => ++requests === 1
+      ? firstResponse : { ok: true, json: async () => liveRules });
+    assert.equal(requests, 2);
+    assert.equal(evaluateCoverage(config, 'Camden', '08004'), 'covered');
+  }
+});
+
+test('persistent download failures stop after two attempts without inventing coverage', async () => {
+  let requests = 0;
+  await assert.rejects(loadCoverageConfig(undefined, async () => {
+    requests += 1;
+    throw new TypeError('Offline');
+  }), /Offline/);
+  assert.equal(requests, 2);
+});
+
+test('a timed-out download gets a fresh signal for its retry', async () => {
+  const signals = [];
+  const config = await loadCoverageConfig(undefined, async (_url, options) => {
+    signals.push(options.signal);
+    if (signals.length === 1) return new Promise((_resolve, reject) => {
+      options.signal.addEventListener('abort', () => reject(new DOMException('Timed out', 'AbortError')), { once: true });
+    });
+    assert.equal(options.signal.aborted, false);
+    return { ok: true, json: async () => liveRules };
+  }, 5);
+  assert.equal(signals.length, 2);
+  assert.notEqual(signals[0], signals[1]);
+  assert.equal(signals[0].aborted, true);
+  assert.equal(evaluateCoverage(config, 'Camden', '08004'), 'covered');
+});
+
+test('editing the form aborts the active download without starting a retry', async () => {
+  const request = new AbortController();
+  let requests = 0;
+  const pending = loadCoverageConfig(request.signal, async (_url, options) => {
+    requests += 1;
+    return new Promise((_resolve, reject) => {
+      options.signal.addEventListener('abort', () => reject(new DOMException('Cancelled', 'AbortError')), { once: true });
+    });
+  });
+  request.abort();
+  await assert.rejects(pending, { name: 'AbortError' });
+  assert.equal(requests, 1);
+});
+
+test('an already-cancelled check makes no download', async () => {
+  const request = new AbortController();
+  request.abort();
+  await assert.rejects(loadCoverageConfig(request.signal, async () => {
+    assert.fail('A cancelled request must not fetch');
+  }), { name: 'AbortError' });
 });
