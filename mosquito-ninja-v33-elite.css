@@ -110,147 +110,189 @@
   .reference-answer summary::after{display:none}
 }
 
-/* V33.2 — high-visibility contact action and seasonal booking invitation. */
+/* V33.3 — premium contact action and hero-integrated spring invitation. */
 .nav .phone{
-  min-width:142px;
-  min-height:52px;
-  padding:7px 16px 8px;
-  display:flex;
-  flex-direction:column;
+  position:relative;
+  min-width:172px;
+  min-height:50px;
+  padding:7px 14px 7px 9px;
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr);
+  grid-template-areas:"icon label" "icon number";
   align-items:center;
-  justify-content:center;
-  gap:2px;
-  border:1px solid rgba(255,255,255,.25);
-  background:linear-gradient(145deg,#f12a32 0%,#c71119 56%,#991016 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 10px 28px rgba(224,32,39,.24),0 0 0 1px rgba(224,32,39,.12);
+  column-gap:10px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:10px;
+  overflow:hidden;
   color:#fff;
-  font-size:.875rem;
-  font-weight:800;
-  letter-spacing:.035em;
-  line-height:1;
-  text-shadow:0 1px 1px rgba(0,0,0,.24);
+  background:linear-gradient(145deg,rgba(19,25,21,.92),rgba(4,7,5,.84));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 12px 30px rgba(0,0,0,.22);
+  -webkit-backdrop-filter:blur(16px) saturate(115%);
+  backdrop-filter:blur(16px) saturate(115%);
+  transition:border-color .22s ease,background-color .22s ease,box-shadow .22s ease,transform .22s ease;
 }
 .nav .phone::before{
-  content:"CALL / TEXT";
-  color:rgba(255,255,255,.78);
-  font-size:.5625rem;
-  font-weight:800;
-  letter-spacing:.16em;
-  line-height:1;
-}
-.nav .phone::after{
   content:"";
   position:absolute;
-  inset:-50% auto -50% -45%;
-  width:30%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.20),transparent);
-  transform:skewX(-18deg);
-  transition:left .45s cubic-bezier(.2,.8,.2,1);
+  top:0;
+  left:13px;
+  right:13px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,32,39,.92),transparent);
   pointer-events:none;
 }
-@media(hover:hover){
-  .nav .phone:hover{
-    border-color:rgba(255,255,255,.45);
-    background:linear-gradient(145deg,#ff343c 0%,#d7161e 58%,#a71117 100%);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 14px 34px rgba(224,32,39,.34),0 0 0 1px rgba(224,32,39,.18);
-    transform:translateY(-2px);
-  }
-  .nav .phone:hover::after{left:125%}
+.phone__icon{
+  grid-area:icon;
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(224,32,39,.34);
+  border-radius:50%;
+  color:#f2454c;
+  background:rgba(224,32,39,.075);
+  box-shadow:inset 0 0 0 3px rgba(224,32,39,.025);
 }
-.nav .phone:focus-visible{outline-color:#b7e358;outline-offset:4px}
-
-.season-booking{
-  position:absolute;
-  z-index:6;
-  top:82px;
-  left:0;
-  right:0;
-  color:#fff;
-  border-block:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(90deg,rgba(5,8,6,.96),rgba(12,19,13,.91) 58%,rgba(5,8,6,.84));
-  box-shadow:0 16px 34px rgba(0,0,0,.16);
-  -webkit-backdrop-filter:blur(14px) saturate(120%);
-  backdrop-filter:blur(14px) saturate(120%);
+.phone__icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.phone__label{
+  grid-area:label;
+  align-self:end;
+  color:#9ea7a0;
+  font-size:.5rem;
+  font-weight:800;
+  letter-spacing:.17em;
+  line-height:1.1;
 }
-.season-booking::before{
-  content:"";
-  position:absolute;
-  inset:0 auto 0 0;
-  width:4px;
-  background:linear-gradient(180deg,#f12a32,#9e1117);
-  box-shadow:0 0 20px rgba(224,32,39,.4);
-}
-.season-booking__inner{
-  min-height:50px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px;
-}
-.season-booking__message{
-  min-width:0;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  color:#aeb7b0;
-  font-size:.75rem;
-  line-height:1.35;
-}
-.season-booking__message strong{
+.phone__number{
+  grid-area:number;
+  align-self:start;
   color:#fff;
   font-family:var(--display);
   font-size:.9375rem;
   font-weight:800;
-  letter-spacing:.07em;
-  white-space:nowrap;
+  letter-spacing:.055em;
+  line-height:1.15;
+}
+@media(hover:hover){
+  .nav .phone:hover{
+    border-color:rgba(224,32,39,.56);
+    background:linear-gradient(145deg,rgba(25,30,26,.96),rgba(10,13,10,.92));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 15px 34px rgba(0,0,0,.28),0 0 22px rgba(224,32,39,.08);
+    transform:translateY(-1px);
+  }
+  .nav .phone:hover .phone__icon{color:#fff;border-color:rgba(224,32,39,.68);background:rgba(224,32,39,.18)}
+}
+.nav .phone:focus-visible{outline:2px solid #b7e358;outline-offset:4px}
+
+.season-booking{
+  position:relative;
+  width:min(100%,520px);
+  min-height:68px;
+  margin:-6px 0 22px;
+  padding:12px 14px;
+  display:grid;
+  grid-template-columns:10px minmax(0,1fr) auto;
+  align-items:center;
+  gap:13px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:12px;
+  color:#fff;
+  background:linear-gradient(135deg,rgba(21,29,23,.86),rgba(6,10,7,.68));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 18px 44px rgba(0,0,0,.18);
+  -webkit-backdrop-filter:blur(14px) saturate(115%);
+  backdrop-filter:blur(14px) saturate(115%);
+}
+.season-booking::before{
+  content:"";
+  position:absolute;
+  top:-1px;
+  left:18px;
+  width:72px;
+  height:1px;
+  background:linear-gradient(90deg,#e02027,rgba(224,32,39,0));
 }
 .season-booking__signal{
   width:7px;
   height:7px;
-  flex:none;
   border-radius:50%;
   background:#a6d83e;
-  box-shadow:0 0 0 4px rgba(166,216,62,.10),0 0 15px rgba(166,216,62,.42);
+  box-shadow:0 0 0 4px rgba(166,216,62,.08),0 0 14px rgba(166,216,62,.32);
+}
+.season-booking__message{min-width:0}
+.season-booking__message strong{
+  display:block;
+  color:#f7f8f6;
+  font-family:var(--display);
+  font-size:.875rem;
+  font-weight:800;
+  letter-spacing:.085em;
+  line-height:1.05;
+}
+.season-booking__message>span{
+  display:block;
+  margin-top:4px;
+  color:#9fa8a1;
+  font-size:.6875rem;
+  line-height:1.35;
 }
 .season-booking a{
-  flex:none;
+  min-height:36px;
+  padding-left:15px;
   display:inline-flex;
   align-items:center;
   gap:8px;
-  color:#fff;
-  font-size:.6875rem;
+  border-left:1px solid rgba(255,255,255,.1);
+  color:#f3f5f3;
+  font-size:.625rem;
   font-weight:800;
-  letter-spacing:.11em;
+  letter-spacing:.105em;
+  line-height:1.25;
   white-space:nowrap;
 }
-.season-booking a span{color:#f12a32;font-size:1rem;transition:transform .2s ease}
+.season-booking a span{color:#ef343b;font-size:.95rem;transition:transform .2s ease}
 .season-booking a:hover{color:#fff}
 .season-booking a:hover span{transform:translateX(3px)}
 
+@media(max-width:1100px) and (min-width:981px){
+  .nav{gap:17px}
+  .nav .phone{min-width:164px}
+}
 @media(max-width:980px){
   .nav .phone{
     width:100%;
-    min-height:52px;
+    min-height:56px;
     margin-top:8px;
-    flex-direction:row;
-    gap:10px;
+    padding-inline:12px 16px;
+    grid-template-columns:34px minmax(0,1fr);
   }
-  .season-booking__message>span:last-child{display:none}
+  .phone__label{font-size:.5625rem}
+  .phone__number{font-size:1rem}
+  .season-booking{max-width:560px}
 }
 @media(max-width:640px){
-  .season-booking{top:70px}
-  .season-booking__inner{min-height:58px;gap:12px}
-  .season-booking__message{gap:9px}
-  .season-booking__message strong{font-size:.75rem;letter-spacing:.055em;white-space:normal}
-  .season-booking a{font-size:.6rem;letter-spacing:.075em;text-align:right}
+  .hero-lede{margin-bottom:22px}
+  .season-booking{
+    min-height:0;
+    margin-bottom:18px;
+    padding:13px;
+    grid-template-columns:9px minmax(0,1fr);
+    gap:11px;
+  }
+  .season-booking__message strong{font-size:.8125rem;letter-spacing:.075em}
+  .season-booking__message>span{font-size:.65625rem}
+  .season-booking a{
+    grid-column:2;
+    min-height:28px;
+    margin-top:1px;
+    padding:8px 0 0;
+    border-top:1px solid rgba(255,255,255,.09);
+    border-left:0;
+    font-size:.625rem;
+  }
 }
 @media(max-width:390px){
-  .season-booking__inner{width:calc(100% - 22px)}
-  .season-booking__message strong{font-size:.7rem}
-  .season-booking a{font-size:.56rem}
-}
-@media(prefers-reduced-motion:reduce){
-  .nav .phone::after{display:none}
+  .season-booking__message strong{font-size:.75rem}
+  .season-booking a{letter-spacing:.085em}
 }
 @media print{
   .season-booking{display:none!important}
