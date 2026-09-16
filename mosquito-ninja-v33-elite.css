@@ -109,3 +109,149 @@
   .reference-answer{break-inside:avoid}
   .reference-answer summary::after{display:none}
 }
+
+/* V33.2 — high-visibility contact action and seasonal booking invitation. */
+.nav .phone{
+  min-width:142px;
+  min-height:52px;
+  padding:7px 16px 8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  border:1px solid rgba(255,255,255,.25);
+  background:linear-gradient(145deg,#f12a32 0%,#c71119 56%,#991016 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 10px 28px rgba(224,32,39,.24),0 0 0 1px rgba(224,32,39,.12);
+  color:#fff;
+  font-size:.875rem;
+  font-weight:800;
+  letter-spacing:.035em;
+  line-height:1;
+  text-shadow:0 1px 1px rgba(0,0,0,.24);
+}
+.nav .phone::before{
+  content:"CALL / TEXT";
+  color:rgba(255,255,255,.78);
+  font-size:.5625rem;
+  font-weight:800;
+  letter-spacing:.16em;
+  line-height:1;
+}
+.nav .phone::after{
+  content:"";
+  position:absolute;
+  inset:-50% auto -50% -45%;
+  width:30%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.20),transparent);
+  transform:skewX(-18deg);
+  transition:left .45s cubic-bezier(.2,.8,.2,1);
+  pointer-events:none;
+}
+@media(hover:hover){
+  .nav .phone:hover{
+    border-color:rgba(255,255,255,.45);
+    background:linear-gradient(145deg,#ff343c 0%,#d7161e 58%,#a71117 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 14px 34px rgba(224,32,39,.34),0 0 0 1px rgba(224,32,39,.18);
+    transform:translateY(-2px);
+  }
+  .nav .phone:hover::after{left:125%}
+}
+.nav .phone:focus-visible{outline-color:#b7e358;outline-offset:4px}
+
+.season-booking{
+  position:absolute;
+  z-index:6;
+  top:82px;
+  left:0;
+  right:0;
+  color:#fff;
+  border-block:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(90deg,rgba(5,8,6,.96),rgba(12,19,13,.91) 58%,rgba(5,8,6,.84));
+  box-shadow:0 16px 34px rgba(0,0,0,.16);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
+  backdrop-filter:blur(14px) saturate(120%);
+}
+.season-booking::before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:4px;
+  background:linear-gradient(180deg,#f12a32,#9e1117);
+  box-shadow:0 0 20px rgba(224,32,39,.4);
+}
+.season-booking__inner{
+  min-height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+.season-booking__message{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#aeb7b0;
+  font-size:.75rem;
+  line-height:1.35;
+}
+.season-booking__message strong{
+  color:#fff;
+  font-family:var(--display);
+  font-size:.9375rem;
+  font-weight:800;
+  letter-spacing:.07em;
+  white-space:nowrap;
+}
+.season-booking__signal{
+  width:7px;
+  height:7px;
+  flex:none;
+  border-radius:50%;
+  background:#a6d83e;
+  box-shadow:0 0 0 4px rgba(166,216,62,.10),0 0 15px rgba(166,216,62,.42);
+}
+.season-booking a{
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#fff;
+  font-size:.6875rem;
+  font-weight:800;
+  letter-spacing:.11em;
+  white-space:nowrap;
+}
+.season-booking a span{color:#f12a32;font-size:1rem;transition:transform .2s ease}
+.season-booking a:hover{color:#fff}
+.season-booking a:hover span{transform:translateX(3px)}
+
+@media(max-width:980px){
+  .nav .phone{
+    width:100%;
+    min-height:52px;
+    margin-top:8px;
+    flex-direction:row;
+    gap:10px;
+  }
+  .season-booking__message>span:last-child{display:none}
+}
+@media(max-width:640px){
+  .season-booking{top:70px}
+  .season-booking__inner{min-height:58px;gap:12px}
+  .season-booking__message{gap:9px}
+  .season-booking__message strong{font-size:.75rem;letter-spacing:.055em;white-space:normal}
+  .season-booking a{font-size:.6rem;letter-spacing:.075em;text-align:right}
+}
+@media(max-width:390px){
+  .season-booking__inner{width:calc(100% - 22px)}
+  .season-booking__message strong{font-size:.7rem}
+  .season-booking a{font-size:.56rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .nav .phone::after{display:none}
+}
+@media print{
+  .season-booking{display:none!important}
+}
