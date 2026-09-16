@@ -2,11 +2,11 @@
 
 Static website for https://njbugninja.com, deployed from the `main` branch to Hostinger. No build step is required.
 
-## V33.2 spring conversion update
+## V33.3 premium contact and spring invitation
 
-- Rebuilds the header phone link as a high-contrast `CALL / TEXT` action while preserving the direct telephone link on every page.
-- Adds a restrained homepage banner for Spring 2027 scheduling with a direct path to the existing quote form.
-- Includes desktop, tablet, narrow-phone, reduced-motion and print treatments without changing service claims or the booking workflow.
+- Refines the header phone link into a dark, icon-led contact control with restrained red detailing while preserving the direct telephone link on every page.
+- Integrates the Spring 2027 invitation into the homepage copy column so the seasonal message no longer interrupts the hero artwork.
+- Keeps the language tied to the existing quote request flow and includes desktop, tablet, narrow-phone, reduced-motion and print treatments.
 
 ## V33 premium video-audit pass
 
