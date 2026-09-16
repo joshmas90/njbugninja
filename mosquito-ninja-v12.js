@@ -12,10 +12,14 @@ const ensureHeadLink = (rel, href, attrs = {}) => {
 
 ensureHeadLink('manifest', '/site.webmanifest');
 
-// A short, quiet brand reveal runs once per browser tab. It avoids the spins,
-// flashes and large scale changes that made the previous launch feel abrupt.
+// A cinematic brand reveal runs once per browser tab. The matching critical
+// head style keeps the first paint black until this overlay is in place.
 (() => {
-  const storageKey = 'mn-launch-splash-v6';
+  const storageKey = 'mn-launch-splash-v7';
+  const releasePrepaint = () => {
+    window.clearTimeout(window.__mnLaunchFallback);
+    document.documentElement.classList.remove('mn-launch-pending');
+  };
   let seen = false;
   try {
     seen = sessionStorage.getItem(storageKey) === '1';
@@ -28,7 +32,10 @@ ensureHeadLink('manifest', '/site.webmanifest');
     seen ||
     !document.body ||
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  ) return;
+  ) {
+    releasePrepaint();
+    return;
+  }
 
   ensureHeadLink('preload', '/assets/mark-transparent-v31.webp', {
     as: 'image',
@@ -42,51 +49,42 @@ ensureHeadLink('manifest', '/site.webmanifest');
   const style = document.createElement('style');
   style.id = 'mn-launch-splash-styles';
   style.textContent = `
-    .mn-launch-overlay{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:#020403;color:#fff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;isolation:isolate;overflow:hidden;opacity:1;visibility:visible;transition:opacity .36s cubic-bezier(.4,0,1,1),visibility .36s ease}
-    .mn-launch-overlay::before{content:"";position:absolute;inset:-24%;background:radial-gradient(circle at 50% 47%,rgba(224,32,39,.19) 0,rgba(224,32,39,.075) 19%,transparent 42%),radial-gradient(circle at 50% 50%,rgba(143,189,46,.055),transparent 54%);opacity:0;transform:scale(.52);transition:opacity .82s ease,transform 1.3s cubic-bezier(.16,.82,.2,1)}
-    .mn-launch-overlay::after{content:"";position:absolute;inset:0;opacity:.15;background-image:radial-gradient(rgba(255,255,255,.32) .45px,transparent .55px),linear-gradient(90deg,transparent 49.94%,rgba(255,255,255,.032) 50%,transparent 50.06%);background-size:7px 7px,100% 100%;-webkit-mask-image:radial-gradient(circle at center,#000,transparent 67%);mask-image:radial-gradient(circle at center,#000,transparent 67%);pointer-events:none}
-    .mn-launch-inner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(98vw,640px);padding:22px 10px;text-align:center;transform:translateY(-1vh)}
-    .mn-launch-mark-wrap{position:relative;width:min(78vw,370px);aspect-ratio:1;display:grid;place-items:center;isolation:isolate}
-    .mn-launch-aura{position:absolute;z-index:-3;inset:13%;border-radius:50%;background:rgba(224,32,39,.12);box-shadow:0 0 46px rgba(224,32,39,.28),0 0 128px rgba(224,32,39,.16),0 0 210px rgba(224,32,39,.07);opacity:0;transform:scale(.28);filter:blur(2px)}
-    .mn-launch-burst{position:absolute;z-index:-2;inset:8%;border:1px solid rgba(224,32,39,.65);border-radius:50%;opacity:0;transform:scale(.2);box-shadow:0 0 26px rgba(224,32,39,.22)}
+    .mn-launch-overlay{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:radial-gradient(circle at 50% 44%,#0b110d 0,#040706 38%,#010201 76%);color:#fff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;isolation:isolate;overflow:hidden;opacity:1;visibility:visible;transition:opacity .42s cubic-bezier(.4,0,1,1),visibility .42s ease}
+    .mn-launch-overlay::before{content:"";position:absolute;inset:-28%;background:radial-gradient(circle at 50% 44%,rgba(224,32,39,.26) 0,rgba(224,32,39,.10) 20%,transparent 45%),radial-gradient(circle at 50% 54%,rgba(143,189,46,.07),transparent 58%);opacity:0;transform:scale(.58);transition:opacity 1s ease,transform 1.7s cubic-bezier(.16,.82,.2,1)}
+    .mn-launch-overlay::after{content:"";position:absolute;inset:0;opacity:.18;background-image:radial-gradient(rgba(255,255,255,.34) .5px,transparent .65px),linear-gradient(90deg,transparent 49.94%,rgba(255,255,255,.038) 50%,transparent 50.06%),linear-gradient(180deg,rgba(0,0,0,.72),transparent 18%,transparent 82%,rgba(0,0,0,.78));background-size:7px 7px,100% 100%,100% 100%;-webkit-mask-image:radial-gradient(circle at center,#000,transparent 76%);mask-image:radial-gradient(circle at center,#000,transparent 76%);pointer-events:none}
+    .mn-launch-inner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(98vw,1120px);padding:24px 12px;text-align:center;transform:translateY(-1.5vh)}
+    .mn-launch-mark-wrap{position:relative;width:min(60vw,50vh,650px);aspect-ratio:1;display:grid;place-items:center;isolation:isolate}
+    .mn-launch-aura{position:absolute;z-index:-3;inset:8%;border-radius:50%;background:rgba(224,32,39,.15);box-shadow:0 0 64px rgba(224,32,39,.34),0 0 170px rgba(224,32,39,.20),0 0 290px rgba(224,32,39,.10);opacity:0;transform:scale(.22);filter:blur(2px)}
+    .mn-launch-burst{position:absolute;z-index:-2;inset:4%;border:1px solid rgba(224,32,39,.72);border-radius:50%;opacity:0;transform:scale(.22);box-shadow:0 0 34px rgba(224,32,39,.28)}
     .mn-launch-orbit{position:absolute;z-index:-1;inset:0;border-radius:50%;border:1px solid rgba(255,255,255,.13);opacity:0;transform:scale(.48) rotate(-130deg)}
     .mn-launch-orbit::before,.mn-launch-orbit::after{content:"";position:absolute;border-radius:50%;background:#e02027;box-shadow:0 0 12px rgba(224,32,39,.8)}
     .mn-launch-orbit::before{width:7px;height:7px;left:11%;top:15%}
     .mn-launch-orbit::after{width:5px;height:5px;right:7%;bottom:24%;background:#8fbd2e;box-shadow:0 0 12px rgba(143,189,46,.8)}
-    .mn-launch-mark{display:block;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(.32) rotate(-72deg);filter:blur(9px) drop-shadow(0 22px 46px rgba(0,0,0,.64));will-change:opacity,transform,filter}
-    .mn-launch-strike{position:absolute;z-index:3;left:50%;top:46.6%;width:54%;height:clamp(8px,2.6%,11px);transform:translate(-50%,-50%) rotate(-38deg);pointer-events:none}
+    .mn-launch-mark{display:block;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(.46) rotate(-42deg);filter:blur(7px) drop-shadow(0 28px 58px rgba(0,0,0,.68));will-change:opacity,transform,filter}
+    .mn-launch-strike{position:absolute;z-index:3;left:50%;top:46.6%;width:62%;height:clamp(10px,2.8%,16px);transform:translate(-50%,-50%) rotate(-38deg);pointer-events:none}
     .mn-launch-strike::before{content:"";display:block;width:100%;height:100%;border-radius:999px;background:linear-gradient(90deg,#bb0d14 0,#e02027 32%,#ff3037 84%,#fff 100%);box-shadow:0 0 7px rgba(224,32,39,.95),0 0 24px rgba(224,32,39,.68),0 0 54px rgba(224,32,39,.32);opacity:0;transform:scaleX(0);transform-origin:left center}
     .mn-launch-strike::after{content:"";position:absolute;right:-1px;top:50%;width:16%;height:260%;border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(255,70,76,.76) 24%,transparent 70%);opacity:0;transform:translateY(-50%) scale(.25)}
-    .mn-launch-lockup{position:relative;width:min(96vw,610px);aspect-ratio:1080/361;margin-top:-34px;overflow:hidden;opacity:0;transform:translateY(18px) scale(.92);filter:blur(7px);clip-path:inset(0 50% 0 50%);will-change:opacity,transform,filter,clip-path}
+    .mn-launch-lockup{position:relative;width:min(90vw,860px);aspect-ratio:1080/361;margin-top:clamp(-72px,-5vw,-42px);overflow:hidden;opacity:0;transform:translateY(24px) scale(.9);filter:blur(8px);clip-path:inset(0 50% 0 50%);will-change:opacity,transform,filter,clip-path}
     .mn-launch-lockup::before{content:"";position:absolute;inset:26% 14% 5%;background:radial-gradient(ellipse,rgba(224,32,39,.18),transparent 69%);filter:blur(18px);pointer-events:none}
     .mn-launch-lockup img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 22px rgba(224,32,39,.16))}
     .mn-launch-overlay.is-active::before{opacity:1;transform:scale(1)}
-    .mn-launch-overlay.is-active .mn-launch-aura{animation:mn-launch-aura 1.5s cubic-bezier(.16,.84,.2,1) .04s both}
-    .mn-launch-overlay.is-active .mn-launch-burst{animation:mn-launch-burst .84s cubic-bezier(.15,.72,.15,1) .65s both}
-    .mn-launch-overlay.is-active .mn-launch-orbit{animation:mn-launch-orbit 1.45s cubic-bezier(.16,.78,.18,1) .06s both}
-    .mn-launch-overlay.is-active .mn-launch-mark{animation:mn-launch-mark 1.02s cubic-bezier(.14,.76,.18,1) .08s both}
-    .mn-launch-overlay.is-active .mn-launch-strike::before{animation:mn-launch-strike .62s cubic-bezier(.14,.72,.18,1) .72s both}
-    .mn-launch-overlay.is-active .mn-launch-strike::after{animation:mn-launch-tip .52s ease-out .78s both}
-    .mn-launch-overlay.is-active .mn-launch-lockup{animation:mn-launch-lockup .86s cubic-bezier(.16,.82,.2,1) .98s both}
+    .mn-launch-overlay.is-active .mn-launch-aura{animation:mn-launch-aura 1.8s cubic-bezier(.16,.84,.2,1) .04s both}
+    .mn-launch-overlay.is-active .mn-launch-burst{animation:mn-launch-burst .92s cubic-bezier(.15,.72,.15,1) .82s both}
+    .mn-launch-overlay.is-active .mn-launch-orbit{animation:mn-launch-orbit 1.85s cubic-bezier(.16,.78,.18,1) .06s both}
+    .mn-launch-overlay.is-active .mn-launch-mark{animation:mn-launch-mark 1.32s cubic-bezier(.14,.76,.18,1) .12s both}
+    .mn-launch-overlay.is-active .mn-launch-strike::before{animation:mn-launch-strike .72s cubic-bezier(.14,.72,.18,1) 1.02s both}
+    .mn-launch-overlay.is-active .mn-launch-strike::after{animation:mn-launch-tip .6s ease-out 1.08s both}
+    .mn-launch-overlay.is-active .mn-launch-lockup{animation:mn-launch-lockup 1.02s cubic-bezier(.16,.82,.2,1) 1.26s both}
     .mn-launch-overlay.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
-    @keyframes mn-launch-mark{0%{opacity:0;transform:scale(.32) rotate(-72deg);filter:blur(9px) drop-shadow(0 22px 46px rgba(0,0,0,.64))}46%{opacity:1;transform:scale(1.1) rotate(4deg);filter:blur(0) drop-shadow(0 22px 46px rgba(0,0,0,.64))}72%{transform:scale(.97) rotate(-1.2deg)}100%{opacity:1;transform:scale(1) rotate(0);filter:blur(0) drop-shadow(0 22px 46px rgba(0,0,0,.64))}}
-    @keyframes mn-launch-aura{0%{opacity:0;transform:scale(.28)}55%{opacity:1;transform:scale(1.18)}100%{opacity:.82;transform:scale(1)}}
-    @keyframes mn-launch-burst{0%{opacity:0;transform:scale(.25)}24%{opacity:.72}100%{opacity:0;transform:scale(1.72)}}
-    @keyframes mn-launch-orbit{0%{opacity:0;transform:scale(.48) rotate(-130deg)}42%{opacity:.8}100%{opacity:.38;transform:scale(1) rotate(36deg)}}
+    @keyframes mn-launch-mark{0%{opacity:0;transform:scale(.46) rotate(-42deg);filter:blur(7px) drop-shadow(0 28px 58px rgba(0,0,0,.68))}48%{opacity:1;transform:scale(1.07) rotate(3deg);filter:blur(0) drop-shadow(0 30px 62px rgba(0,0,0,.7))}74%{transform:scale(.985) rotate(-1deg)}100%{opacity:1;transform:scale(1) rotate(0);filter:blur(0) drop-shadow(0 28px 58px rgba(0,0,0,.68))}}
+    @keyframes mn-launch-aura{0%{opacity:0;transform:scale(.22)}58%{opacity:1;transform:scale(1.14)}100%{opacity:.88;transform:scale(1)}}
+    @keyframes mn-launch-burst{0%{opacity:0;transform:scale(.22)}24%{opacity:.82}100%{opacity:0;transform:scale(1.68)}}
+    @keyframes mn-launch-orbit{0%{opacity:0;transform:scale(.5) rotate(-110deg)}42%{opacity:.86}100%{opacity:.42;transform:scale(1) rotate(50deg)}}
     @keyframes mn-launch-strike{0%{opacity:0;transform:scaleX(0)}12%{opacity:1}72%{opacity:1;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1)}}
     @keyframes mn-launch-tip{0%{opacity:0;transform:translateY(-50%) scale(.2)}35%{opacity:1;transform:translateY(-50%) scale(1)}100%{opacity:0;transform:translateY(-50%) scale(1.7)}}
-    @keyframes mn-launch-lockup{0%{opacity:0;transform:translateY(18px) scale(.92);filter:blur(7px);clip-path:inset(0 50% 0 50%)}48%{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}72%{transform:translateY(0) scale(1.025)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);clip-path:inset(0 0 0 0)}}
-    @media(max-width:520px){.mn-launch-mark-wrap{width:min(88vw,348px)}.mn-launch-inner{transform:translateY(-2vh);padding-inline:5px}.mn-launch-lockup{width:min(98vw,500px);margin-top:-28px}}
-    @media(max-height:560px) and (orientation:landscape){.mn-launch-inner{transform:none}.mn-launch-mark-wrap{width:min(60vh,260px)}.mn-launch-lockup{width:min(82vw,460px);margin-top:-26px}}
-    /* V33.4 calm launch: a compact fade, with no spin, flash or bounce. */
-    .mn-launch-overlay{transition:opacity .22s ease,visibility .22s ease}
-    .mn-launch-overlay::before{opacity:.7;transform:none;transition:opacity .32s ease}
-    .mn-launch-mark-wrap{width:min(42vw,190px)}
-    .mn-launch-aura,.mn-launch-burst,.mn-launch-orbit,.mn-launch-strike{display:none}
-    .mn-launch-mark{opacity:0;transform:scale(.985);filter:drop-shadow(0 18px 36px rgba(0,0,0,.54));transition:opacity .34s ease,transform .34s ease;animation:none!important}
-    .mn-launch-lockup{width:min(76vw,430px);margin-top:-18px;opacity:0;transform:translateY(4px);filter:none;clip-path:none;transition:opacity .34s ease .06s,transform .34s ease .06s;animation:none!important}
-    .mn-launch-overlay.is-active .mn-launch-mark,.mn-launch-overlay.is-active .mn-launch-lockup{opacity:1;transform:none;animation:none!important}
-    @media(max-width:520px){.mn-launch-mark-wrap{width:min(42vw,170px)}.mn-launch-lockup{width:min(84vw,390px);margin-top:-16px}}
+    @keyframes mn-launch-lockup{0%{opacity:0;transform:translateY(24px) scale(.9);filter:blur(8px);clip-path:inset(0 50% 0 50%)}48%{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}74%{transform:translateY(0) scale(1.025)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);clip-path:inset(0 0 0 0)}}
+    @media(max-width:520px){.mn-launch-mark-wrap{width:min(82vw,42vh,420px)}.mn-launch-inner{transform:translateY(-1vh);padding-inline:5px}.mn-launch-lockup{width:min(96vw,560px);margin-top:-34px}}
+    @media(max-height:560px) and (orientation:landscape){.mn-launch-inner{transform:none}.mn-launch-mark-wrap{width:min(54vh,340px)}.mn-launch-lockup{width:min(74vw,570px);margin-top:-34px}}
   `;
   document.head.appendChild(style);
 
@@ -110,17 +108,18 @@ ensureHeadLink('manifest', '/site.webmanifest');
   const previousOverflow = document.documentElement.style.overflow;
   document.documentElement.style.overflow = 'hidden';
   document.body.prepend(overlay);
+  releasePrepaint();
 
   requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('is-active')));
 
-  const visibleFor = 900;
+  const visibleFor = 2600;
   window.setTimeout(() => {
     overlay.classList.add('is-leaving');
     document.documentElement.style.overflow = previousOverflow;
     window.setTimeout(() => {
       overlay.remove();
       style.remove();
-    }, 240);
+    }, 440);
   }, visibleFor);
 })();
 
