@@ -297,3 +297,32 @@
 @media print{
   .season-booking{display:none!important}
 }
+
+/* V33.4 — calm, predictable navigation and motion. */
+html{scroll-behavior:auto!important}
+
+/* Keep the fixed header's geometry stable as the page starts moving. */
+.site-header.is-stuck .nav-wrap{min-height:82px}
+.site-header.is-stuck .brand img{width:48px;height:48px}
+
+/* Eliminate continuous and viewport-triggered movement. */
+.hero-art{animation:none!important;transform:none!important}
+.mn-motion-ready .mn-reveal,
+.mn-motion-ready .mn-reveal.is-revealed{
+  opacity:1!important;
+  transform:none!important;
+  transition:none!important;
+}
+
+/* Hover feedback stays tactile without shifting large interface regions. */
+@media(hover:hover){
+  .card:hover,.product-card:hover{transform:translateY(-3px)}
+  .steps li:hover,.benefits>div:hover{transform:none}
+  .process-section:hover .process-photo img{transform:scale(1.01)}
+  .footer-grid>div:not(:first-child) a:hover{transform:none}
+}
+
+@media(max-width:640px){
+  .site-header.is-stuck .nav-wrap{min-height:70px}
+  .site-header.is-stuck .brand img{width:40px;height:40px}
+}

@@ -12,12 +12,10 @@ const ensureHeadLink = (rel, href, attrs = {}) => {
 
 ensureHeadLink('manifest', '/site.webmanifest');
 
-// Website-optimized counterpart to the native app launch overlay. It preserves
-// the same mark / brand / red slash language, but runs only once per browser tab
-// session and clears much faster than the app splash so navigation and CWV are
-// not repeatedly penalized.
+// A short, quiet brand reveal runs once per browser tab. It avoids the spins,
+// flashes and large scale changes that made the previous launch feel abrupt.
 (() => {
-  const storageKey = 'mn-launch-splash-v5';
+  const storageKey = 'mn-launch-splash-v6';
   let seen = false;
   try {
     seen = sessionStorage.getItem(storageKey) === '1';
@@ -26,7 +24,11 @@ ensureHeadLink('manifest', '/site.webmanifest');
     // Storage may be unavailable in hardened/private browsing. Showing once on
     // this page is preferable to breaking the launch experience.
   }
-  if (seen || !document.body) return;
+  if (
+    seen ||
+    !document.body ||
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) return;
 
   ensureHeadLink('preload', '/assets/mark-transparent-v31.webp', {
     as: 'image',
@@ -76,7 +78,15 @@ ensureHeadLink('manifest', '/site.webmanifest');
     @keyframes mn-launch-lockup{0%{opacity:0;transform:translateY(18px) scale(.92);filter:blur(7px);clip-path:inset(0 50% 0 50%)}48%{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0)}72%{transform:translateY(0) scale(1.025)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);clip-path:inset(0 0 0 0)}}
     @media(max-width:520px){.mn-launch-mark-wrap{width:min(88vw,348px)}.mn-launch-inner{transform:translateY(-2vh);padding-inline:5px}.mn-launch-lockup{width:min(98vw,500px);margin-top:-28px}}
     @media(max-height:560px) and (orientation:landscape){.mn-launch-inner{transform:none}.mn-launch-mark-wrap{width:min(60vh,260px)}.mn-launch-lockup{width:min(82vw,460px);margin-top:-26px}}
-    @media(prefers-reduced-motion:reduce){.mn-launch-overlay,.mn-launch-overlay::before,.mn-launch-aura,.mn-launch-burst,.mn-launch-orbit,.mn-launch-mark,.mn-launch-strike::before,.mn-launch-strike::after,.mn-launch-lockup{transition:none!important;animation:none!important}.mn-launch-overlay::before,.mn-launch-aura,.mn-launch-orbit,.mn-launch-mark,.mn-launch-lockup{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}.mn-launch-burst,.mn-launch-strike{display:none}}
+    /* V33.4 calm launch: a compact fade, with no spin, flash or bounce. */
+    .mn-launch-overlay{transition:opacity .22s ease,visibility .22s ease}
+    .mn-launch-overlay::before{opacity:.7;transform:none;transition:opacity .32s ease}
+    .mn-launch-mark-wrap{width:min(42vw,190px)}
+    .mn-launch-aura,.mn-launch-burst,.mn-launch-orbit,.mn-launch-strike{display:none}
+    .mn-launch-mark{opacity:0;transform:scale(.985);filter:drop-shadow(0 18px 36px rgba(0,0,0,.54));transition:opacity .34s ease,transform .34s ease;animation:none!important}
+    .mn-launch-lockup{width:min(76vw,430px);margin-top:-18px;opacity:0;transform:translateY(4px);filter:none;clip-path:none;transition:opacity .34s ease .06s,transform .34s ease .06s;animation:none!important}
+    .mn-launch-overlay.is-active .mn-launch-mark,.mn-launch-overlay.is-active .mn-launch-lockup{opacity:1;transform:none;animation:none!important}
+    @media(max-width:520px){.mn-launch-mark-wrap{width:min(42vw,170px)}.mn-launch-lockup{width:min(84vw,390px);margin-top:-16px}}
   `;
   document.head.appendChild(style);
 
@@ -101,17 +111,16 @@ ensureHeadLink('manifest', '/site.webmanifest');
   document.documentElement.style.overflow = 'hidden';
   document.body.prepend(overlay);
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('is-active')));
 
-  const visibleFor = reducedMotion ? 500 : 2500;
+  const visibleFor = 900;
   window.setTimeout(() => {
     overlay.classList.add('is-leaving');
     document.documentElement.style.overflow = previousOverflow;
     window.setTimeout(() => {
       overlay.remove();
       style.remove();
-    }, reducedMotion ? 20 : 380);
+    }, 240);
   }, visibleFor);
 })();
 
@@ -354,39 +363,5 @@ window.addEventListener('afterprint', () => {
   answersClosedBeforePrint = [];
 });
 
-// Apply light motion to short visual groups. Reading columns and form controls
-// remain stationary, and the final stylesheet keeps every target visible.
-if (
-  'IntersectionObserver' in window &&
-  !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-) {
-  const revealTargets = [...document.querySelectorAll([
-    '.section-copy',
-    '.cards .card',
-    '.process-photo',
-    '.process-copy',
-    '.why-grid > *',
-    '.area-grid .map',
-    '.product-card',
-    '.cta .shell',
-    '.footer-grid > *'
-  ].join(','))];
-
-  if (revealTargets.length) {
-    document.documentElement.classList.add('mn-motion-ready');
-    revealTargets.forEach((target, index) => {
-      target.classList.add('mn-reveal');
-      target.style.setProperty('--mn-reveal-delay', `${Math.min(index % 3, 2) * 35}ms`);
-    });
-
-    const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-revealed');
-        revealObserver.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px 14% 0px', threshold: 0 });
-
-    revealTargets.forEach(target => revealObserver.observe(target));
-  }
-}
+// Page content remains visually stable while scrolling. Brand motion is kept to
+// brief hover feedback instead of viewport-triggered reveals.
