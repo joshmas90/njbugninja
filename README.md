@@ -2,6 +2,12 @@
 
 Static website for https://njbugninja.com, deployed from the `main` branch to Hostinger. No build step is required.
 
+## V33.2 spring conversion update
+
+- Rebuilds the header phone link as a high-contrast `CALL / TEXT` action while preserving the direct telephone link on every page.
+- Adds a restrained homepage banner for Spring 2027 scheduling with a direct path to the existing quote form.
+- Includes desktop, tablet, narrow-phone, reduced-motion and print treatments without changing service claims or the booking workflow.
+
 ## V33 premium video-audit pass
 
 - Makes the homepage service-area promise fully legible against the dark green section.
