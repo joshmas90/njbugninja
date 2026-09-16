@@ -2,6 +2,13 @@
 
 Static website for https://njbugninja.com, deployed from the `main` branch to Hostinger. No build step is required.
 
+## V33.4 calm motion and premium conversion path
+
+- Replaces the long full-page smooth scroll to anchored sections with a direct, stable destination change, preventing the rapid fly-through shown in the review recording.
+- Removes viewport-triggered section movement and the continuous hero drift, keeps the fixed header dimensions stable, and reduces large hover travel.
+- Simplifies the once-per-tab brand reveal to a short fade without spinning, flashing, bouncing or blur; visitors requesting reduced motion do not receive the reveal.
+- Retains the V33.3 premium contact control and Spring 2027 invitation described below.
+
 ## V33.3 premium contact and spring invitation
 
 - Refines the header phone link into a dark, icon-led contact control with restrained red detailing while preserving the direct telephone link on every page.
