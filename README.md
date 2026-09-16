@@ -2,6 +2,12 @@
 
 Static website for https://njbugninja.com, deployed from the `main` branch to Hostinger. No build step is required.
 
+## V33.5 seasonal CTA composition
+
+- Moves the Spring 2027 route-planning invitation out of the crowded left copy column and into the quiet lower-right area of the desktop hero artwork.
+- Uses a wider, low-profile glass panel that preserves the ninja focal point and sits above the service rail rather than interrupting the primary headline and actions.
+- Returns the invitation to normal document flow beneath the hero copy on tablet and mobile layouts so it remains readable without covering the responsive artwork.
+
 ## V33.4 calm motion and premium conversion path
 
 - Replaces the long full-page smooth scroll to anchored sections with a direct, stable destination change, preventing the rapid fly-through shown in the review recording.
