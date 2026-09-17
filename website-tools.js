@@ -5,7 +5,8 @@
     mosquito: 'Mosquito control',
     tick: 'Tick control',
     both: 'Mosquito & tick control',
-    commercial: 'Commercial / government property'
+    commercial: 'Commercial / government property',
+    fly: 'Outdoor fly control'
   };
   const clean = value => String(value || '').trim();
 
@@ -58,8 +59,20 @@
                 '@type': 'Offer',
                 itemOffered: {
                   '@type': 'Service',
+                  '@id': 'https://njbugninja.com/fly-control.html#service',
+                  name: 'Outdoor fly control',
+                  serviceType: 'Targeted outdoor house-fly and nuisance-fly control',
+                  url: 'https://njbugninja.com/fly-control.html',
+                  provider: { '@id': 'https://njbugninja.com/#business' },
+                  areaServed: { '@type': 'Place', name: 'South Jersey' }
+                }
+              },
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
                   '@id': 'https://njbugninja.com/commercial.html#service',
-                  name: 'Commercial and government mosquito and tick control',
+                  name: 'Commercial and government outdoor pest control',
                   serviceType: 'Outdoor pest control for commercial, municipal and government-managed properties',
                   url: 'https://njbugninja.com/commercial.html',
                   provider: { '@id': 'https://njbugninja.com/#business' },
@@ -96,6 +109,14 @@
           },
           {
             '@type': 'Question',
+            name: 'Do you offer outdoor fly control?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Yes. Targeted outdoor fly control is available for house-fly and nuisance-fly pressure around source, resting and activity areas. Source reduction is part of the property discussion.'
+            }
+          },
+          {
+            '@type': 'Question',
             name: 'Which parts of New Jersey do you serve?',
             acceptedAnswer: {
               '@type': 'Answer',
@@ -128,10 +149,10 @@
           },
           {
             '@type': 'Question',
-            name: 'Do you guarantee zero mosquitoes or ticks?',
+            name: 'Do you guarantee zero outdoor pests?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'No. Outdoor pest pressure changes with weather, habitat and neighboring properties. Service is focused on reducing the pest problem without promising complete elimination.'
+              text: 'No. Outdoor pest pressure changes with weather, habitat, sanitation conditions and neighboring properties. Service is focused on reducing the pest problem without promising complete elimination.'
             }
           },
           {
@@ -147,7 +168,7 @@
             name: 'Do you treat commercial outdoor spaces?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Yes. Commercial service covers outdoor business spaces such as dining patios, event lawns, pool surroundings and courtyards.'
+              text: 'Yes. Commercial service covers outdoor business spaces such as dining patios, event lawns, pool surroundings, waste areas and courtyards.'
             }
           }
         ]
