@@ -2,6 +2,12 @@
 
 Static website for https://njbugninja.com, deployed from the `main` branch to Hostinger. No build step is required.
 
+## V33.8 full-card Spring CTA
+
+- Makes the complete Spring 2027 route-planning card one semantic link to the existing quote workflow, including keyboard focus and analytics through the existing anchor event path.
+- Intensifies the premium treatment with a brighter red edge pass, deeper animated ember halo, diagonal energy sweep and pulsing availability signal.
+- Preserves a clear static glow and removes all ambient animation when reduced motion is requested.
+
 ## V33.7 spring CTA ember treatment
 
 - Adds a slow red ember glow beneath the Spring 2027 route-planning card and a restrained highlight sweep across its upper edge.
