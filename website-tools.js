@@ -212,6 +212,22 @@
 
   enhanceStructuredData();
 
+  // The main runtime emits privacy-conscious interaction events without sending
+  // customer-entered form values. Forward those event names to Plausible so
+  // conversions can be measured alongside pageviews. The Plausible bootstrap
+  // function queues calls safely while its async script is loading.
+  document.addEventListener('mosquitoNinja:site-event', event => {
+    const detail = event && event.detail && typeof event.detail === 'object' ? event.detail : {};
+    const eventName = clean(detail.event);
+    if (!eventName || typeof window.plausible !== 'function') return;
+
+    const props = {};
+    if (detail.page_path) props.page_path = clean(detail.page_path).slice(0, 180);
+    if (detail.service) props.service = clean(detail.service).slice(0, 60);
+
+    window.plausible(eventName, Object.keys(props).length ? { props } : undefined);
+  });
+
   const form = document.querySelector('#quote-form');
   if (form) {
     const status = document.querySelector('#quote-status');
