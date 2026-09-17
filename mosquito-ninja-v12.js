@@ -12,6 +12,27 @@ const ensureHeadLink = (rel, href, attrs = {}) => {
 
 ensureHeadLink('manifest', '/site.webmanifest');
 
+// On tall desktop viewports, keep the entire dark opening composition (hero +
+// service-highlight strip) filling at least the first screen. Without this, the
+// light services section can peek up as an empty band beneath the launch view.
+if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+  const launchViewportStyle = document.createElement('style');
+  launchViewportStyle.id = 'mn-home-launch-viewport';
+  launchViewportStyle.textContent = `
+    @media (min-width: 981px) {
+      .hero {
+        min-height: max(760px, calc(100svh - 96px));
+        min-height: max(760px, calc(100dvh - 96px));
+      }
+      .hero-inner {
+        min-height: max(650px, calc(100svh - 96px));
+        min-height: max(650px, calc(100dvh - 96px));
+      }
+    }
+  `;
+  document.head.appendChild(launchViewportStyle);
+}
+
 // A cinematic brand reveal runs once per browser tab. The matching critical
 // head style keeps the first paint black until this overlay is in place.
 (() => {
@@ -112,7 +133,7 @@ ensureHeadLink('manifest', '/site.webmanifest');
 
   requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('is-active')));
 
-  const visibleFor = 2600;
+  const visibleFor = 3000;
   window.setTimeout(() => {
     overlay.classList.add('is-leaving');
     document.documentElement.style.overflow = previousOverflow;
