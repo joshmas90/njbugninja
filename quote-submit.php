@@ -185,16 +185,26 @@ if (trim((string)($data['website'] ?? '')) !== '') {
 $name = clean_field($data['name'] ?? '', 120);
 $phone = clean_field($data['phone'] ?? '', 30);
 $location = clean_field($data['location'] ?? '', 120);
-$serviceKey = clean_field($data['service'] ?? 'mosquito', 30);
+$serviceInput = $data['services'] ?? ($data['service'] ?? []);
+$serviceKeys = is_array($serviceInput) ? $serviceInput : [$serviceInput];
+$serviceKeys = array_values(array_unique(array_filter(array_map(
+    static fn($value): string => clean_field($value, 30),
+    $serviceKeys
+))));
+if (in_array('both', $serviceKeys, true)) {
+    $serviceKeys = array_values(array_filter($serviceKeys, static fn($key): bool => $key !== 'both'));
+    $serviceKeys[] = 'mosquito';
+    $serviceKeys[] = 'tick';
+    $serviceKeys = array_values(array_unique($serviceKeys));
+}
 $propertyTypeKey = clean_field($data['propertyType'] ?? 'residential', 30);
 $message = clean_field($data['message'] ?? '', 3000);
 
 $services = [
     'mosquito' => 'Mosquito control',
     'tick' => 'Tick control',
-    'both' => 'Mosquito & tick control',
     'fly' => 'Outdoor fly control',
-    'unsure' => 'Multiple pests / not sure yet',
+    'unsure' => 'Not sure / discuss my property',
     // Backward compatibility for older cached forms.
     'commercial' => 'Commercial / government property',
 ];
@@ -210,14 +220,17 @@ if (
     $name === '' ||
     $location === '' ||
     strlen($phoneDigits) < 10 ||
-    !array_key_exists($serviceKey, $services) ||
+    count($serviceKeys) < 1 ||
+    count($serviceKeys) > 4 ||
+    count(array_filter($serviceKeys, static fn($key): bool => !array_key_exists($key, $services))) > 0 ||
     !array_key_exists($propertyTypeKey, $propertyTypes)
 ) {
     respond(422, ['ok' => false, 'message' => 'Please complete your name, phone number, town/ZIP, service and property type.']);
 }
 
 $recipient = 'service@njbugninja.com';
-$service = $services[$serviceKey];
+$serviceLabels = array_map(static fn($key): string => $services[$key], $serviceKeys);
+$service = implode(', ', $serviceLabels);
 $propertyType = $propertyTypes[$propertyTypeKey];
 $subjectLocation = preg_replace('/[\r\n]+/', ' ', $location) ?? $location;
 $subject = 'New Website Quote - ' . $service . ' - ' . $subjectLocation;
@@ -229,7 +242,7 @@ $body = "New Mosquito Ninja website quote request\n\n"
     . "Name: {$name}\n"
     . "Phone: {$phone}\n"
     . "Town / ZIP: {$location}\n"
-    . "Service: {$service}\n"
+    . "Services: {$service}\n"
     . "Property type: {$propertyType}\n\n"
     . "Property details:\n" . ($message !== '' ? $message : '(none provided)') . "\n\n"
     . "Submitted: " . gmdate('Y-m-d H:i:s') . " UTC\n"
