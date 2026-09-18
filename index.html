@@ -42,12 +42,12 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,800;1,900&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap">
   <link rel="preload" as="image" href="/assets/hero-v20.webp?v=35.1.0" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="/mosquito-ninja-v12.css?v=24.0.0">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["Organization","LocalBusiness"],"@id":"https://njbugninja.com/#business","name":"Mosquito Ninja","alternateName":"NJ Bug Ninja","url":"https://njbugninja.com/","telephone":"+1-609-313-6317","email":"service@njbugninja.com","logo":{"@id":"https://njbugninja.com/#brand-image"},"description":"Owner-operated mosquito and tick control with targeted outdoor fly service for South Jersey residential, commercial and government properties. Contact Mosquito Ninja to confirm route availability.","areaServed":[{"@type":"AdministrativeArea","name":"Burlington County, New Jersey"},{"@type":"AdministrativeArea","name":"Camden County, New Jersey"},{"@type":"AdministrativeArea","name":"Gloucester County, New Jersey"}],"image":{"@id":"https://njbugninja.com/#brand-image"}},{"@type":"WebSite","@id":"https://njbugninja.com/#website","name":"Mosquito Ninja","alternateName":"NJ Bug Ninja","url":"https://njbugninja.com/","inLanguage":"en-US","publisher":{"@id":"https://njbugninja.com/#business"}},{"@type":"WebPage","@id":"https://njbugninja.com/#webpage","url":"https://njbugninja.com/","name":"Mosquito & Tick Control in South Jersey | Mosquito Ninja","description":"Owner-operated mosquito, tick and targeted outdoor fly control for South Jersey homes, businesses and public properties.","inLanguage":"en-US","isPartOf":{"@id":"https://njbugninja.com/#website"},"about":{"@id":"https://njbugninja.com/#business"},"primaryImageOfPage":{"@id":"https://njbugninja.com/#brand-image"}},{"@type":"ImageObject","@id":"https://njbugninja.com/#brand-image","url":"https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg","contentUrl":"https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg","encodingFormat":"image/jpeg","width":1536,"height":1024,"caption":"Mosquito Ninja outdoor pest control"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["Organization","LocalBusiness"],"@id":"https://njbugninja.com/#business","name":"Mosquito Ninja","alternateName":"NJ Bug Ninja","url":"https://njbugninja.com/","telephone":"+1-609-313-6317","email":"service@njbugninja.com","logo":{"@id":"https://njbugninja.com/#brand-image"},"description":"Owner-operated mosquito and tick control with targeted outdoor fly service for South Jersey residential, commercial and government properties. Contact Mosquito Ninja to confirm route availability.","areaServed":[{"@type":"AdministrativeArea","name":"Burlington County, New Jersey"},{"@type":"AdministrativeArea","name":"Camden County, New Jersey"},{"@type":"AdministrativeArea","name":"Gloucester County, New Jersey"}],"image":{"@id":"https://njbugninja.com/#brand-image"}},{"@type":"WebSite","@id":"https://njbugninja.com/#website","name":"Mosquito Ninja","alternateName":"NJ Bug Ninja","url":"https://njbugninja.com/","inLanguage":"en-US","publisher":{"@id":"https://njbugninja.com/#business"}},{"@type":"WebPage","@id":"https://njbugninja.com/#webpage","url":"https://njbugninja.com/","name":"Mosquito, Tick & Fly Control in South Jersey | Mosquito Ninja","description":"Owner-operated mosquito, tick and targeted outdoor fly control for South Jersey homes, businesses and public properties.","inLanguage":"en-US","isPartOf":{"@id":"https://njbugninja.com/#website"},"about":{"@id":"https://njbugninja.com/#business"},"primaryImageOfPage":{"@id":"https://njbugninja.com/#brand-image"}},{"@type":"ImageObject","@id":"https://njbugninja.com/#brand-image","url":"https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg","contentUrl":"https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg","encodingFormat":"image/jpeg","width":1536,"height":1024,"caption":"Mosquito Ninja outdoor pest control"}]}</script>
   <link rel="stylesheet" href="/mosquito-ninja-v24-refined.css?v=24.0.0">
   <link rel="stylesheet" href="/mosquito-ninja-v25-refinements.css?v=25.0.0">
   <link rel="stylesheet" href="/mosquito-ninja-v29-premium.css?v=31.0.0">
   <link rel="stylesheet" href="/mosquito-ninja-v32-products.css?v=32.0.0">
-  <link rel="stylesheet" href="/mosquito-ninja-v33-elite.css?v=33.8.0">
+  <link rel="stylesheet" href="/mosquito-ninja-v33-elite.css?v=35.2.0">
   <link rel="stylesheet" href="/mosquito-ninja-v34-fly.css?v=34.0.0">
 </head>
 <body>
@@ -61,8 +61,14 @@
     <button class="menu-toggle" aria-controls="nav" aria-expanded="false"><span></span><span></span><span></span><b class="sr-only">Menu</b></button>
     <nav class="nav" id="nav" aria-label="Primary navigation">
       <a class="active" href="/" aria-current="page">Home</a>
-      <a href="/mosquito-control.html">Mosquito</a>
-      <a href="/tick-control.html">Ticks</a><a href="/fly-control.html">Fly Control</a>
+      <div class="services-menu">
+        <button class="services-menu__toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="services-menu-panel">Services</button>
+        <div class="services-menu__panel" id="services-menu-panel">
+          <a href="/mosquito-control.html">Mosquito Control</a>
+          <a href="/tick-control.html">Tick Control</a>
+          <a href="/fly-control.html">Outdoor Fly Control</a>
+        </div>
+      </div>
       <a href="/commercial.html">Commercial</a>
       <a href="/service-area.html">Service Area</a>
       <a href="/faq.html">FAQ</a>
@@ -216,7 +222,7 @@
       <div><p class="eyebrow">READY TO TAKE BACK THE YARD?</p><h2>PEST<br>PROBLEM?<br><em>SEND IN THE<br>NINJA.</em></h2><p>Send your town or ZIP code, the outdoor areas you use and where you&rsquo;re noticing mosquitoes, ticks or outdoor fly pressure. Owner-operated service keeps the process direct from quote through treatment.</p><div class="callout"><small>CALL OR TEXT</small><a href="tel:+16093136317">609-313-6317</a></div></div>
       <form class="quote-form" id="quote-form">
         <div class="field-row"><label>NAME<input name="name" type="text" autocomplete="name" maxlength="120" placeholder="Your name" required></label><label>PHONE<input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="(609) 555-0123" required></label></div>
-        <div class="field-row"><label>TOWN / ZIP<input name="location" type="text" maxlength="120" placeholder="Town or ZIP code" required></label><label>PROPERTY TYPE<select name="propertyType"><option value="residential">Residential</option><option value="commercial">Commercial / business</option><option value="government">Government / municipal</option></select></label></div><fieldset class="service-picker"><legend>SERVICES YOU\u2019RE INTERESTED IN</legend><p class="service-picker__hint">Select all that apply.</p><div class="service-picker__grid"><label><input type="checkbox" name="service" value="mosquito"><span>Mosquito control</span></label><label><input type="checkbox" name="service" value="tick"><span>Tick control</span></label><label><input type="checkbox" name="service" value="fly"><span>Outdoor fly control</span></label><label><input type="checkbox" name="service" value="unsure"><span>Not sure / discuss my property</span></label></div></fieldset>
+        <div class="field-row"><label>TOWN / ZIP<input name="location" type="text" maxlength="120" placeholder="Town or ZIP code" required></label><label>PROPERTY TYPE<select name="propertyType"><option value="residential">Residential</option><option value="commercial">Commercial / business</option><option value="government">Government / municipal</option></select></label></div><fieldset class="service-picker"><legend>SERVICES YOU’RE INTERESTED IN</legend><p class="service-picker__hint">Select all that apply.</p><div class="service-picker__grid"><label><input type="checkbox" name="service" value="mosquito"><span>Mosquito control</span></label><label><input type="checkbox" name="service" value="tick"><span>Tick control</span></label><label><input type="checkbox" name="service" value="fly"><span>Outdoor fly control</span></label><label><input type="checkbox" name="service" value="unsure"><span>Not sure / discuss my property</span></label></div></fieldset>
         <label>TELL US ABOUT THE PROPERTY<textarea name="message" rows="5" maxlength="3000" placeholder="Backyard, pool area, wooded edge, trash or recycling area, patio, fly activity near bins, or other problem areas..."></textarea></label>
         <button class="btn primary full" type="submit">SEND QUOTE REQUEST &rarr;</button>
         <button class="btn copy-request" type="button" id="copy-request">COPY REQUEST</button>
@@ -236,6 +242,6 @@
   <div class="shell footer-bottom"><span>&copy; <span id="year">2026</span> Mosquito Ninja. All rights reserved.</span><a href="/privacy.html">Privacy</a></div>
 </footer>
 <nav class="mobile-actions" aria-label="Quick contact"><a href="tel:+16093136317">CALL MOSQUITO NINJA</a><a href="/#quote">REQUEST A QUOTE</a></nav>
-<script src="/mosquito-ninja-v12.js?v=33.7.0"></script>
-<script src="/website-tools.js?v=34.0.0"></script></body>
+<script src="/mosquito-ninja-v12.js?v=35.2.0"></script>
+<script src="/website-tools.js?v=35.2.0"></script></body>
 </html>
