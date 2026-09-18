@@ -239,33 +239,63 @@
   enhanceStructuredData();
 
   // Keep the primary navigation concise: individual pest pages live under one
-  // Services control rather than competing as separate top-level items.
+  // Services control. Static markup is preferred; this also upgrades any older
+  // cached page that still contains the three individual pest links.
   document.querySelectorAll('nav.nav').forEach(nav => {
-    const mosquito = nav.querySelector('a[href="/mosquito-control.html"]');
-    const tick = nav.querySelector('a[href="/tick-control.html"]');
-    const fly = nav.querySelector('a[href="/fly-control.html"]');
-    if (!mosquito || !tick || !fly || nav.querySelector('.services-menu')) return;
-    const wrap = document.createElement('div');
-    wrap.className = 'services-menu';
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'services-menu__toggle';
+    let wrap = nav.querySelector('.services-menu');
+    if (!wrap) {
+      const mosquito = nav.querySelector('a[href="/mosquito-control.html"]');
+      const tick = nav.querySelector('a[href="/tick-control.html"]');
+      const fly = nav.querySelector('a[href="/fly-control.html"]');
+      if (!mosquito || !tick || !fly) return;
+      wrap = document.createElement('div');
+      wrap.className = 'services-menu';
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'services-menu__toggle';
+      button.textContent = 'Services';
+      const panel = document.createElement('div');
+      panel.className = 'services-menu__panel';
+      [mosquito, tick, fly].forEach(link => panel.appendChild(link));
+      wrap.append(button, panel);
+      nav.insertBefore(wrap, nav.querySelector('a[href="/commercial.html"]'));
+    }
+
+    const button = wrap.querySelector('.services-menu__toggle');
+    const panel = wrap.querySelector('.services-menu__panel');
+    if (!button || !panel) return;
+
+    if (!panel.id) panel.id = 'services-menu-panel';
+    button.setAttribute('aria-haspopup', 'true');
+    button.setAttribute('aria-controls', panel.id);
     button.setAttribute('aria-expanded', 'false');
-    button.textContent = 'Services';
-    const panel = document.createElement('div');
-    panel.className = 'services-menu__panel';
-    [mosquito, tick, fly].forEach(link => panel.appendChild(link));
-    wrap.append(button, panel);
-    nav.insertBefore(wrap, nav.querySelector('a[href="/commercial.html"]'));
-    button.addEventListener('click', () => {
-      const open = wrap.classList.toggle('is-open');
-      button.setAttribute('aria-expanded', String(open));
+    if (panel.querySelector('a[aria-current="page"], a.active')) button.classList.add('active');
+
+    const closeMenu = () => {
+      wrap.classList.remove('is-open');
+      button.setAttribute('aria-expanded', 'false');
+    };
+    const openMenu = () => {
+      wrap.classList.add('is-open');
+      button.setAttribute('aria-expanded', 'true');
+    };
+
+    button.addEventListener('click', event => {
+      event.stopPropagation();
+      wrap.classList.contains('is-open') ? closeMenu() : openMenu();
     });
-    document.addEventListener('click', event => {
-      if (!wrap.contains(event.target)) {
-        wrap.classList.remove('is-open');
-        button.setAttribute('aria-expanded', 'false');
+    wrap.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeMenu();
+        button.focus();
       }
+    });
+    wrap.addEventListener('focusout', event => {
+      if (!wrap.contains(event.relatedTarget)) closeMenu();
+    });
+    panel.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+    document.addEventListener('click', event => {
+      if (!wrap.contains(event.target)) closeMenu();
     });
   });
 
@@ -290,6 +320,7 @@
     const status = document.querySelector('#quote-status');
     const fields = Object.fromEntries(['name', 'phone', 'location', 'propertyType', 'message'].map(name => [name, form.elements.namedItem(name)]));
     const serviceFields = [...form.querySelectorAll('input[name="service"]')];
+    const servicePicker = form.querySelector('.service-picker');
     const params = new URLSearchParams(window.location.search);
     const requestedService = params.get('service');
     const requestedPropertyType = params.get('propertyType');
@@ -315,6 +346,10 @@
         status.textContent = '';
       });
     });
+    serviceFields.forEach(field => field.addEventListener('change', () => {
+      servicePicker?.removeAttribute('aria-invalid');
+      status.textContent = '';
+    }));
     function preparedRequest() {
       fields.name.setCustomValidity(clean(fields.name.value) ? '' : 'Please enter your name.');
       fields.location.setCustomValidity(clean(fields.location.value) ? '' : 'Please enter the property town or ZIP code.');
@@ -324,8 +359,15 @@
         status.textContent = 'Please check the highlighted contact details.';
         return null;
       }
+      const selectedServices = serviceFields.filter(field => field.checked).map(field => field.value);
+      if (!selectedServices.length) {
+        servicePicker?.setAttribute('aria-invalid', 'true');
+        status.textContent = 'Select at least one service, or choose “Not sure / discuss my property.”';
+        serviceFields[0]?.focus();
+        return null;
+      }
       const values = Object.fromEntries(Object.entries(fields).map(([name, field]) => [name, field.value]));
-      values.services = serviceFields.filter(field => field.checked).map(field => field.value);
+      values.services = selectedServices;
       return buildQuote(values);
     }
     form.addEventListener('submit', event => {
