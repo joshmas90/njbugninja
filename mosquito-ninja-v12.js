@@ -221,6 +221,95 @@ if (toggle && nav) {
   });
 }
 
+// Premium contact sheet for the header phone control. The original tel: href
+// remains intact as a no-JavaScript fallback, while the enhanced experience lets
+// visitors choose call, text or quote without losing their place.
+const headerPhoneLinks = [...document.querySelectorAll('.nav .phone')];
+if (headerPhoneLinks.length) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'contact-sheet-backdrop';
+  backdrop.hidden = true;
+  backdrop.innerHTML = `
+    <section class="contact-sheet" role="dialog" aria-modal="true" aria-labelledby="contact-sheet-title" aria-describedby="contact-sheet-copy">
+      <button class="contact-sheet__close" type="button" aria-label="Close contact options">×</button>
+      <p class="contact-sheet__eyebrow">DIRECT CONTACT</p>
+      <h2 id="contact-sheet-title">CALL, TEXT OR REQUEST A QUOTE.</h2>
+      <p id="contact-sheet-copy">Reach Mosquito Ninja directly at <strong>609-313-6317</strong>. For a property quote, send your town or ZIP code and the outdoor pest concerns you want reviewed.</p>
+      <div class="contact-sheet__actions">
+        <a class="contact-sheet__action contact-sheet__action--primary" href="tel:+16093136317">CALL 609-313-6317</a>
+        <a class="contact-sheet__action" href="sms:+16093136317">SEND A TEXT</a>
+        <a class="contact-sheet__action" href="/#quote">REQUEST A QUOTE</a>
+      </div>
+      <p class="contact-sheet__season">Planning ahead for Spring 2027? Mention spring scheduling in your quote request so route availability can be discussed early.</p>
+    </section>
+  `;
+  document.body.appendChild(backdrop);
+
+  const sheet = backdrop.querySelector('.contact-sheet');
+  const closeButton = backdrop.querySelector('.contact-sheet__close');
+  let contactTrigger = null;
+
+  const focusable = () => [...sheet.querySelectorAll('a[href], button:not([disabled])')];
+
+  const closeContactSheet = () => {
+    if (backdrop.hidden) return;
+    backdrop.hidden = true;
+    document.documentElement.classList.remove('mn-contact-open');
+    const trigger = contactTrigger;
+    contactTrigger = null;
+    if (trigger && document.contains(trigger)) trigger.focus();
+  };
+
+  const openContactSheet = trigger => {
+    contactTrigger = trigger;
+    backdrop.hidden = false;
+    document.documentElement.classList.add('mn-contact-open');
+    requestAnimationFrame(() => {
+      const primary = sheet.querySelector('.contact-sheet__action--primary');
+      (primary || closeButton).focus();
+    });
+  };
+
+  headerPhoneLinks.forEach(link => {
+    link.setAttribute('aria-label', 'Contact Mosquito Ninja at 609-313-6317');
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      openContactSheet(link);
+    });
+  });
+
+  closeButton.addEventListener('click', closeContactSheet);
+  backdrop.addEventListener('click', event => {
+    if (event.target === backdrop) closeContactSheet();
+  });
+  sheet.addEventListener('click', event => {
+    if (event.target.closest('a[href="/#quote"]')) closeContactSheet();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (backdrop.hidden) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeContactSheet();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+
+    const items = focusable();
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+}
+
 // Analytics-ready, privacy-conscious event hooks. These do not transmit data by
 // themselves. If a first-party analytics layer is added later, it can listen to
 // the custom event or an existing dataLayer without changing the customer flow.
@@ -336,7 +425,7 @@ if (quoteForm) {
       try { result = await response.json(); } catch { result = {}; }
       if (!response.ok || !result.ok) throw new Error(result.message || 'Quote delivery failed');
 
-      if (status) status.textContent = result.message || 'Request sent. Mosquito Ninja will follow up using the phone number you provided.';
+      if (status) status.textContent = result.message || 'Request sent. Mosquito Ninja will review the property details and follow up using the phone number you provided to discuss availability and next steps.';
       emitSiteEvent('quote_form_success', { service: payload.services.join('+') || 'unknown' });
       quoteForm.reset();
       servicePicker?.removeAttribute('aria-invalid');
