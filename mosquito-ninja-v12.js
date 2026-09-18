@@ -297,13 +297,27 @@ if (quoteForm) {
       return;
     }
 
+    const serviceInputs = [...quoteForm.querySelectorAll('input[name="service"]')];
+    const selectedServices = serviceInputs.filter(input => input.checked).map(input => input.value);
+    const servicePicker = quoteForm.querySelector('.service-picker');
+    if (!selectedServices.length) {
+      servicePicker?.setAttribute('aria-invalid', 'true');
+      if (status) status.textContent = 'Select at least one service, or choose “Not sure / discuss my property.”';
+      serviceInputs[0]?.focus();
+      emitSiteEvent('quote_form_validation_error');
+      return;
+    }
+    servicePicker?.removeAttribute('aria-invalid');
+
     const originalLabel = submitButton.textContent;
     submitButton.disabled = true;
     submitButton.textContent = 'SENDING…';
     quoteForm.setAttribute('aria-busy', 'true');
     if (status) status.textContent = 'Sending your quote request to Mosquito Ninja…';
 
-    const payload = Object.fromEntries(new FormData(quoteForm).entries());
+    const formData = new FormData(quoteForm);
+    const payload = Object.fromEntries([...formData.entries()].filter(([key]) => key !== 'service'));
+    payload.services = selectedServices;
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 12000);
 
@@ -323,8 +337,9 @@ if (quoteForm) {
       if (!response.ok || !result.ok) throw new Error(result.message || 'Quote delivery failed');
 
       if (status) status.textContent = result.message || 'Request sent. Mosquito Ninja will follow up using the phone number you provided.';
-      emitSiteEvent('quote_form_success', { service: payload.service || 'unknown' });
+      emitSiteEvent('quote_form_success', { service: payload.services.join('+') || 'unknown' });
       quoteForm.reset();
+      servicePicker?.removeAttribute('aria-invalid');
       if (phone) phone.removeAttribute('aria-invalid');
     } catch (error) {
       emitSiteEvent('quote_form_error');
