@@ -194,6 +194,7 @@ $services = [
     'tick' => 'Tick control',
     'both' => 'Mosquito & tick control',
     'fly' => 'Outdoor fly control',
+    'unsure' => 'Multiple pests / not sure yet',
     // Backward compatibility for older cached forms.
     'commercial' => 'Commercial / government property',
 ];
