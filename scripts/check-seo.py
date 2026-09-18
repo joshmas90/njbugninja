@@ -136,7 +136,8 @@ check('Sitemap: ' + ORIGIN + '/sitemap.xml' in robots, 'Missing sitemap in robot
 check(not re.search(r'^Disallow:\s*/\s*$', robots, re.M), 'robots.txt blocks the site')
 css = (ROOT / 'mosquito-ninja-v12.css').read_text()
 for asset in re.findall(r"url\(['\"]?(/[^)'\"]+)", css):
-    check((ROOT / asset.lstrip('/')).is_file(), 'Missing CSS asset: ' + asset)
+    asset_path = urlsplit(asset).path
+    check((ROOT / asset_path.lstrip('/')).is_file(), 'Missing CSS asset: ' + asset)
 if errors:
     raise SystemExit('\n'.join(['SEO validation FAILED:'] + errors))
 print(f'PASS: {len(pages)} HTML pages, {len(canonicals)} canonical sitemap URLs, metadata, JSON-LD, images and internal links.')
