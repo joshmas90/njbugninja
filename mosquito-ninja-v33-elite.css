@@ -468,3 +468,127 @@ html{scroll-behavior:auto!important}
   .services-menu.is-open .services-menu__panel{display:block}
   .service-picker__grid{grid-template-columns:1fr}
 }
+
+
+/* V33.9 — accessible premium contact sheet for the header contact control. */
+.mn-contact-open{overflow:hidden}
+.contact-sheet-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:rgba(1,4,2,.78);
+  -webkit-backdrop-filter:blur(12px) saturate(105%);
+  backdrop-filter:blur(12px) saturate(105%);
+}
+.contact-sheet-backdrop[hidden]{display:none!important}
+.contact-sheet{
+  position:relative;
+  width:min(100%,560px);
+  padding:30px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:20px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 88% 2%,rgba(224,32,39,.16),transparent 36%),
+    linear-gradient(145deg,rgba(14,20,16,.99),rgba(4,7,5,.99));
+  box-shadow:0 34px 90px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.contact-sheet::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:28px;
+  right:28px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,32,39,.9),transparent);
+}
+.contact-sheet__close{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:44px;
+  height:44px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:50%;
+  color:#fff;
+  background:rgba(255,255,255,.045);
+  font:400 1.65rem/1 var(--body);
+  cursor:pointer;
+}
+.contact-sheet__close:hover{border-color:rgba(224,32,39,.52);background:rgba(224,32,39,.1)}
+.contact-sheet__close:focus-visible,
+.contact-sheet__action:focus-visible{outline:3px solid #b7e358;outline-offset:3px}
+.contact-sheet__eyebrow{
+  margin:0 54px 10px 0;
+  color:#f2454c;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.18em;
+}
+.contact-sheet h2{
+  margin:0 48px 14px 0;
+  color:#fff;
+  font-family:var(--display);
+  font-size:clamp(2rem,6vw,3.1rem);
+  line-height:.94;
+  letter-spacing:-.025em;
+}
+.contact-sheet #contact-sheet-copy{
+  margin:0;
+  max-width:46rem;
+  color:#c3cbc5;
+  font-size:.98rem;
+  line-height:1.68;
+}
+.contact-sheet__actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:22px;
+}
+.contact-sheet__action{
+  min-height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 15px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;
+  color:#fff;
+  background:rgba(255,255,255,.04);
+  font-size:.76rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-align:center;
+  text-decoration:none;
+}
+.contact-sheet__action--primary{
+  grid-column:1/-1;
+  border-color:rgba(224,32,39,.66);
+  background:linear-gradient(145deg,#d91f27,#a9141a);
+  box-shadow:0 12px 30px rgba(224,32,39,.18);
+}
+.contact-sheet__action:hover{border-color:rgba(224,32,39,.55);background:rgba(224,32,39,.11)}
+.contact-sheet__action--primary:hover{background:linear-gradient(145deg,#e52a32,#bb171e)}
+.contact-sheet__season{
+  margin:16px 0 0;
+  padding-top:15px;
+  border-top:1px solid rgba(255,255,255,.09);
+  color:#98a19a;
+  font-size:.8rem;
+  line-height:1.55;
+}
+@media(max-width:560px){
+  .contact-sheet-backdrop{align-items:end;padding:14px}
+  .contact-sheet{padding:26px 20px 22px;border-radius:18px}
+  .contact-sheet h2{margin-right:34px}
+  .contact-sheet__actions{grid-template-columns:1fr}
+  .contact-sheet__action--primary{grid-column:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .contact-sheet,.contact-sheet-backdrop{scroll-behavior:auto}
+}
