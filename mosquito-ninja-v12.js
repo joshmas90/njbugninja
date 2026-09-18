@@ -133,7 +133,7 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
 
   requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('is-active')));
 
-  const visibleFor = 3000;
+  const visibleFor = 4000;
   window.setTimeout(() => {
     overlay.classList.add('is-leaving');
     document.documentElement.style.overflow = previousOverflow;
