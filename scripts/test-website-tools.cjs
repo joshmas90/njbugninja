@@ -29,15 +29,18 @@ test('malformed rules never produce a coverage promise', () => {
   ]) assert.throws(() => evaluateCoverage(config, 'camden', '08004'));
 });
 test('quote text preserves customer punctuation, Unicode and multiline property notes', () => {
-  const message = buildQuote({ name: '  José & Lee  ', phone: '(609) 555-0100', location: 'Atco 08004', service: 'commercial', message: 'Patio & pool 🦟\nGate #2; event at 6?' });
+  const message = buildQuote({ name: '  José & Lee  ', phone: '(609) 555-0100', location: 'Atco 08004', service: 'fly', propertyType: 'commercial', message: 'Patio & pool 🦟\nGate #2; event at 6?' });
   assert.match(message, /Name: José & Lee\n/);
-  assert.match(message, /Service: Commercial \/ government property/);
-  assert.match(message, /Property: Patio & pool 🦟\nGate #2; event at 6\?/);
+  assert.match(message, /Service: Outdoor fly control/);
+  assert.match(message, /Property type: Commercial \/ business/);
+  assert.match(message, /Property details: Patio & pool 🦟\nGate #2; event at 6\?/);
   assert.equal(decodeURIComponent(encodeURIComponent(message)), message);
 });
-test('both pests and default service have readable labels', () => {
-  assert.match(buildQuote({ service: 'both' }), /Service: Mosquito & tick control/);
-  assert.match(buildQuote({ service: 'invalid' }), /Service: Mosquito control/);
+test('service and property type choices have readable labels', () => {
+  assert.match(buildQuote({ service: 'both', propertyType: 'government' }), /Service: Mosquito & tick control/);
+  assert.match(buildQuote({ service: 'both', propertyType: 'government' }), /Property type: Government \/ municipal/);
+  assert.match(buildQuote({ service: 'invalid', propertyType: 'invalid' }), /Service: Mosquito control/);
+  assert.match(buildQuote({ service: 'invalid', propertyType: 'invalid' }), /Property type: Residential/);
 });
 
 test('a temporary rules download failure retries and returns Camden coverage', async () => {
