@@ -79,6 +79,9 @@ for name, page in sorted(pages.items()):
         check(page.meta('og:url') == [expected_url], prefix + 'Open Graph URL differs from canonical')
         check(page.meta('og:title') == [page.title], prefix + 'Open Graph title mismatch')
         check(page.meta('og:description') == page.meta('description'), prefix + 'Open Graph description mismatch')
+        check(page.meta('twitter:title') == [page.title], prefix + 'Twitter title mismatch')
+        check(page.meta('twitter:description') == page.meta('description'), prefix + 'Twitter description mismatch')
+        check(page.meta('twitter:card') == ['summary_large_image'], prefix + 'Twitter card mismatch')
         check('noindex' not in ','.join(page.meta('robots')), prefix + 'indexable page has noindex')
         canonicals.append(expected_url)
         try:
@@ -87,11 +90,14 @@ for name, page in sorted(pages.items()):
             nodes = {node['@id']: node for node in graph}
             check(len(nodes) == len(graph), prefix + 'duplicate structured data ids')
             check(nodes[ORIGIN + '/#business']['telephone'] == '+1-609-313-6317', prefix + 'business phone mismatch')
+            webpage_id = ORIGIN + '/#webpage' if name == 'index.html' else expected_url + '#webpage'
+            check(nodes[webpage_id]['name'] == page.title, prefix + 'WebPage structured-data title mismatch')
+            check(nodes[webpage_id]['description'] == page.meta('description')[0], prefix + 'WebPage structured-data description mismatch')
             if name != 'index.html':
                 crumbs = nodes[expected_url + '#breadcrumb']['itemListElement']
                 check([c['position'] for c in crumbs] == [1, 2], prefix + 'invalid breadcrumb positions')
                 check(crumbs[-1]['item'] == expected_url, prefix + 'breadcrumb URL mismatch')
-            if name in {'mosquito-control.html', 'tick-control.html', 'commercial.html'}:
+            if name in {'mosquito-control.html', 'tick-control.html', 'fly-control.html', 'commercial.html'}:
                 check(nodes[expected_url + '#service']['@type'] == 'Service', prefix + 'missing Service entity')
             def validate_refs(value):
                 if isinstance(value, dict):
