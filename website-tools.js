@@ -5,7 +5,8 @@
     mosquito: 'Mosquito control',
     tick: 'Tick control',
     both: 'Mosquito & tick control',
-    fly: 'Outdoor fly control'
+    fly: 'Outdoor fly control',
+    unsure: 'Multiple pests / not sure yet'
   };
   const propertyTypeNames = {
     residential: 'Residential',
