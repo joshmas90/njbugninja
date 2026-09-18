@@ -5,8 +5,12 @@
     mosquito: 'Mosquito control',
     tick: 'Tick control',
     both: 'Mosquito & tick control',
-    commercial: 'Commercial / government property',
     fly: 'Outdoor fly control'
+  };
+  const propertyTypeNames = {
+    residential: 'Residential',
+    commercial: 'Commercial / business',
+    government: 'Government / municipal'
   };
   const clean = value => String(value || '').trim();
 
@@ -181,7 +185,8 @@
       `Name: ${clean(values.name)}\nPhone: ${clean(values.phone)}\n` +
       `Town/ZIP: ${clean(values.location)}\n` +
       `Service: ${serviceNames[values.service] || serviceNames.mosquito}\n` +
-      `Property: ${clean(values.message)}`;
+      `Property type: ${propertyTypeNames[values.propertyType] || propertyTypeNames.residential}\n` +
+      `Property details: ${clean(values.message)}`;
   }
 
   function evaluateCoverage(config, county, zip) {
@@ -252,9 +257,18 @@
   const form = document.querySelector('#quote-form');
   if (form) {
     const status = document.querySelector('#quote-status');
-    const fields = Object.fromEntries(['name', 'phone', 'location', 'service', 'message'].map(name => [name, form.elements.namedItem(name)]));
+    const fields = Object.fromEntries(['name', 'phone', 'location', 'service', 'propertyType', 'message'].map(name => [name, form.elements.namedItem(name)]));
     const params = new URLSearchParams(window.location.search);
-    if (Object.prototype.hasOwnProperty.call(serviceNames, params.get('service'))) fields.service.value = params.get('service');
+    const requestedService = params.get('service');
+    const requestedPropertyType = params.get('propertyType');
+    if (Object.prototype.hasOwnProperty.call(serviceNames, requestedService)) {
+      fields.service.value = requestedService;
+    } else if (requestedService === 'commercial') {
+      fields.propertyType.value = 'commercial';
+    }
+    if (Object.prototype.hasOwnProperty.call(propertyTypeNames, requestedPropertyType)) {
+      fields.propertyType.value = requestedPropertyType;
+    }
     const county = clean(params.get('county'));
     const zip = clean(params.get('zip'));
     if (!fields.location.value && /^\d{5}$/.test(zip)) fields.location.value = zip;
