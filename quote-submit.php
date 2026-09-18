@@ -186,22 +186,38 @@ $name = clean_field($data['name'] ?? '', 120);
 $phone = clean_field($data['phone'] ?? '', 30);
 $location = clean_field($data['location'] ?? '', 120);
 $serviceKey = clean_field($data['service'] ?? 'mosquito', 30);
+$propertyTypeKey = clean_field($data['propertyType'] ?? 'residential', 30);
 $message = clean_field($data['message'] ?? '', 3000);
 
 $services = [
     'mosquito' => 'Mosquito control',
     'tick' => 'Tick control',
     'both' => 'Mosquito & tick control',
+    'fly' => 'Outdoor fly control',
+    // Backward compatibility for older cached forms.
     'commercial' => 'Commercial / government property',
 ];
 
+$propertyTypes = [
+    'residential' => 'Residential',
+    'commercial' => 'Commercial / business',
+    'government' => 'Government / municipal',
+];
+
 $phoneDigits = preg_replace('/\D+/', '', $phone) ?? '';
-if ($name === '' || $location === '' || strlen($phoneDigits) < 10 || !array_key_exists($serviceKey, $services)) {
-    respond(422, ['ok' => false, 'message' => 'Please complete your name, phone number, town/ZIP and service.']);
+if (
+    $name === '' ||
+    $location === '' ||
+    strlen($phoneDigits) < 10 ||
+    !array_key_exists($serviceKey, $services) ||
+    !array_key_exists($propertyTypeKey, $propertyTypes)
+) {
+    respond(422, ['ok' => false, 'message' => 'Please complete your name, phone number, town/ZIP, service and property type.']);
 }
 
 $recipient = 'service@njbugninja.com';
 $service = $services[$serviceKey];
+$propertyType = $propertyTypes[$propertyTypeKey];
 $subjectLocation = preg_replace('/[\r\n]+/', ' ', $location) ?? $location;
 $subject = 'New Website Quote - ' . $service . ' - ' . $subjectLocation;
 if (mb_strlen($subject) > 180) {
@@ -212,7 +228,8 @@ $body = "New Mosquito Ninja website quote request\n\n"
     . "Name: {$name}\n"
     . "Phone: {$phone}\n"
     . "Town / ZIP: {$location}\n"
-    . "Service: {$service}\n\n"
+    . "Service: {$service}\n"
+    . "Property type: {$propertyType}\n\n"
     . "Property details:\n" . ($message !== '' ? $message : '(none provided)') . "\n\n"
     . "Submitted: " . gmdate('Y-m-d H:i:s') . " UTC\n"
     . "Source: https://njbugninja.com/\n";
