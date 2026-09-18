@@ -4,9 +4,8 @@
   const serviceNames = {
     mosquito: 'Mosquito control',
     tick: 'Tick control',
-    both: 'Mosquito & tick control',
     fly: 'Outdoor fly control',
-    unsure: 'Multiple pests / not sure yet'
+    unsure: 'Not sure / discuss my property'
   };
   const propertyTypeNames = {
     residential: 'Residential',
@@ -185,7 +184,7 @@
     return `Hi Mosquito Ninja, I'd like a property quote.\n\n` +
       `Name: ${clean(values.name)}\nPhone: ${clean(values.phone)}\n` +
       `Town/ZIP: ${clean(values.location)}\n` +
-      `Service: ${serviceNames[values.service] || serviceNames.mosquito}\n` +
+      `Services: ${(Array.isArray(values.services) ? values.services : [values.service]).filter(Boolean).map(value => serviceNames[value] || value).join(', ') || 'Not specified'}\n` +
       `Property type: ${propertyTypeNames[values.propertyType] || propertyTypeNames.residential}\n` +
       `Property details: ${clean(values.message)}`;
   }
@@ -239,6 +238,37 @@
 
   enhanceStructuredData();
 
+  // Keep the primary navigation concise: individual pest pages live under one
+  // Services control rather than competing as separate top-level items.
+  document.querySelectorAll('nav.nav').forEach(nav => {
+    const mosquito = nav.querySelector('a[href="/mosquito-control.html"]');
+    const tick = nav.querySelector('a[href="/tick-control.html"]');
+    const fly = nav.querySelector('a[href="/fly-control.html"]');
+    if (!mosquito || !tick || !fly || nav.querySelector('.services-menu')) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'services-menu';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'services-menu__toggle';
+    button.setAttribute('aria-expanded', 'false');
+    button.textContent = 'Services';
+    const panel = document.createElement('div');
+    panel.className = 'services-menu__panel';
+    [mosquito, tick, fly].forEach(link => panel.appendChild(link));
+    wrap.append(button, panel);
+    nav.insertBefore(wrap, nav.querySelector('a[href="/commercial.html"]'));
+    button.addEventListener('click', () => {
+      const open = wrap.classList.toggle('is-open');
+      button.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', event => {
+      if (!wrap.contains(event.target)) {
+        wrap.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
   // The main runtime emits privacy-conscious interaction events without sending
   // customer-entered form values. Forward those event names to Plausible so
   // conversions can be measured alongside pageviews. The Plausible bootstrap
@@ -258,12 +288,16 @@
   const form = document.querySelector('#quote-form');
   if (form) {
     const status = document.querySelector('#quote-status');
-    const fields = Object.fromEntries(['name', 'phone', 'location', 'service', 'propertyType', 'message'].map(name => [name, form.elements.namedItem(name)]));
+    const fields = Object.fromEntries(['name', 'phone', 'location', 'propertyType', 'message'].map(name => [name, form.elements.namedItem(name)]));
+    const serviceFields = [...form.querySelectorAll('input[name="service"]')];
     const params = new URLSearchParams(window.location.search);
     const requestedService = params.get('service');
     const requestedPropertyType = params.get('propertyType');
     if (Object.prototype.hasOwnProperty.call(serviceNames, requestedService)) {
-      fields.service.value = requestedService;
+      const requested = serviceFields.find(field => field.value === requestedService);
+      if (requested) requested.checked = true;
+    } else if (requestedService === 'both') {
+      serviceFields.filter(field => ['mosquito', 'tick'].includes(field.value)).forEach(field => { field.checked = true; });
     } else if (requestedService === 'commercial') {
       fields.propertyType.value = 'commercial';
     }
@@ -290,7 +324,9 @@
         status.textContent = 'Please check the highlighted contact details.';
         return null;
       }
-      return buildQuote(Object.fromEntries(Object.entries(fields).map(([name, field]) => [name, field.value])));
+      const values = Object.fromEntries(Object.entries(fields).map(([name, field]) => [name, field.value]));
+      values.services = serviceFields.filter(field => field.checked).map(field => field.value);
+      return buildQuote(values);
     }
     form.addEventListener('submit', event => {
       event.preventDefault();
