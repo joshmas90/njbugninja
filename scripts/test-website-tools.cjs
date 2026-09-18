@@ -1,5 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { buildQuote, evaluateCoverage, loadCoverageConfig } = require('../website-tools.js');
 const liveRules = require('../service-area-config.json');
 
@@ -43,6 +45,24 @@ test('multi-service and property type choices have readable labels', () => {
   assert.match(buildQuote({ services: ['unsure'], propertyType: 'residential' }), /Services: Not sure \/ discuss my property/);
   assert.match(buildQuote({ services: [], propertyType: 'invalid' }), /Services: Not specified/);
   assert.match(buildQuote({ services: [], propertyType: 'invalid' }), /Property type: Residential/);
+});
+
+
+test('service navigation and quote submission stay multi-service end to end', () => {
+  const root = path.resolve(__dirname, '..');
+  const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  const runtime = fs.readFileSync(path.join(root, 'mosquito-ninja-v12.js'), 'utf8');
+  const backend = fs.readFileSync(path.join(root, 'quote-submit.php'), 'utf8');
+  const css = fs.readFileSync(path.join(root, 'mosquito-ninja-v33-elite.css'), 'utf8');
+
+  assert.match(index, /class="services-menu"/);
+  assert.equal((index.match(/name="service"/g) || []).length, 4);
+  assert.match(index, /SERVICES YOU’RE INTERESTED IN/);
+  assert.match(runtime, /payload\.services = selectedServices/);
+  assert.match(backend, /\$serviceInput = \$data\['services'\]/);
+  assert.match(backend, /Services: \{\$service\}/);
+  assert.match(css, /content:"  ▾"/);
+  assert.doesNotMatch(css, /String\.fromCharCode/);
 });
 
 test('a temporary rules download failure retries and returns Camden coverage', async () => {
