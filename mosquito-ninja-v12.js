@@ -355,12 +355,21 @@ if (quoteForm) {
   const note = quoteForm.querySelector('.form-note');
   const nameField = quoteForm.elements.namedItem('name');
   const phone = quoteForm.elements.namedItem('phone');
+  const emailField = quoteForm.elements.namedItem('email');
   const locationField = quoteForm.elements.namedItem('location');
+  const contactInputs = [...quoteForm.querySelectorAll('input[name="contactPreference"]')];
+  const contactPicker = quoteForm.querySelector('.contact-picker');
   const serviceInputs = [...quoteForm.querySelectorAll('input[name="service"]')];
   const servicePicker = quoteForm.querySelector('.service-picker');
   const isValidUsPhone = value => {
     const digits = String(value || '').replace(/\D/g, '');
     return digits.length === 10 || (digits.length === 11 && digits.startsWith('1'));
+  };
+  const isValidEmail = value => {
+    const trimmed = String(value || '').trim();
+    if (!trimmed || !emailField) return false;
+    emailField.setCustomValidity('');
+    return !emailField.validity.typeMismatch;
   };
   const setQuoteStatus = (state, title, message, shouldFocus = false) => {
     if (!status) return;
@@ -421,11 +430,25 @@ if (quoteForm) {
   honeypot.style.height = '1px';
   quoteForm.appendChild(honeypot);
 
-  [nameField, phone, locationField].forEach(field => {
+  [nameField, phone, emailField, locationField].forEach(field => {
     if (!field) return;
     field.addEventListener('input', () => {
       field.setCustomValidity('');
       field.removeAttribute('aria-invalid');
+    });
+  });
+
+  contactInputs.forEach(input => {
+    input.addEventListener('change', () => {
+      contactPicker?.removeAttribute('aria-invalid');
+      if (phone) {
+        phone.setCustomValidity('');
+        phone.removeAttribute('aria-invalid');
+      }
+      if (emailField) {
+        emailField.setCustomValidity('');
+        emailField.removeAttribute('aria-invalid');
+      }
     });
   });
 
@@ -448,7 +471,14 @@ if (quoteForm) {
     event.stopImmediatePropagation();
 
     const trimmedName = nameField ? nameField.value.trim() : '';
+    const trimmedPhone = phone ? phone.value.trim() : '';
+    const trimmedEmail = emailField ? emailField.value.trim() : '';
     const trimmedLocation = locationField ? locationField.value.trim() : '';
+    const selectedContact = contactInputs.find(input => input.checked)?.value || '';
+    const phoneProvided = trimmedPhone.length > 0;
+    const emailProvided = trimmedEmail.length > 0;
+    const validPhone = phoneProvided && isValidUsPhone(trimmedPhone);
+    const validEmail = emailProvided && isValidEmail(trimmedEmail);
 
     if (nameField) {
       const validName = trimmedName.length > 0;
@@ -462,19 +492,50 @@ if (quoteForm) {
       locationField.setAttribute('aria-invalid', String(!validLocation));
     }
 
+    if (!selectedContact) {
+      contactPicker?.setAttribute('aria-invalid', 'true');
+      setQuoteStatus('warning', 'CHOOSE A CONTACT METHOD', 'Tell us how you would prefer Mosquito Ninja to reply.');
+      contactInputs[0]?.focus();
+      emitSiteEvent('quote_form_validation_error');
+      return;
+    }
+    contactPicker?.removeAttribute('aria-invalid');
+
     if (phone) {
-      const validPhone = isValidUsPhone(phone.value);
-      phone.setCustomValidity(validPhone ? '' : 'Please enter a valid 10-digit U.S. phone number, including area code.');
-      phone.setAttribute('aria-invalid', String(!validPhone));
+      let phoneMessage = '';
+      if (phoneProvided && !validPhone) {
+        phoneMessage = 'Please enter a valid 10-digit U.S. phone number, including area code.';
+      } else if ((selectedContact === 'text' || selectedContact === 'call') && !validPhone) {
+        phoneMessage = selectedContact === 'text'
+          ? 'A valid phone number is required when Text is your preferred contact method.'
+          : 'A valid phone number is required when Call is your preferred contact method.';
+      } else if (selectedContact === 'no-preference' && !validPhone && !validEmail) {
+        phoneMessage = 'Enter a valid phone number or email address so we can respond.';
+      }
+      phone.setCustomValidity(phoneMessage);
+      phone.setAttribute('aria-invalid', String(Boolean(phoneMessage)));
+    }
+
+    if (emailField) {
+      let emailMessage = '';
+      if (emailProvided && !validEmail) {
+        emailMessage = 'Please enter a valid email address.';
+      } else if (selectedContact === 'email' && !validEmail) {
+        emailMessage = 'A valid email address is required when Email is your preferred contact method.';
+      }
+      emailField.setCustomValidity(emailMessage);
+      emailField.setAttribute('aria-invalid', String(Boolean(emailMessage)));
     }
 
     if (!quoteForm.reportValidity() || !submitButton) {
-      setQuoteStatus('warning', 'CHECK REQUIRED DETAILS', 'Please check the highlighted contact details before sending.');
+      setQuoteStatus('warning', 'CHECK CONTACT DETAILS', 'Please check the highlighted details so we can reply the way you prefer.');
       emitSiteEvent('quote_form_validation_error');
       return;
     }
 
     if (nameField) nameField.value = trimmedName;
+    if (phone) phone.value = trimmedPhone;
+    if (emailField) emailField.value = trimmedEmail;
     if (locationField) locationField.value = trimmedLocation;
 
     const selectedServices = serviceInputs.filter(input => input.checked).map(input => input.value);
@@ -523,11 +584,13 @@ if (quoteForm) {
       try { result = await response.json(); } catch { result = {}; }
       if (!response.ok || !result.ok) throw new Error(result.message || 'Quote delivery failed');
 
-      setQuoteStatus('success', 'QUOTE REQUEST SENT', result.message || 'Your quote request was accepted for delivery to service@njbugninja.com. Mosquito Ninja will review the property details and follow up using the phone number you provided.', true);
+      setQuoteStatus('success', 'QUOTE REQUEST SENT', result.message || 'Your quote request was accepted for delivery to service@njbugninja.com. Mosquito Ninja will follow up using your preferred contact method.', true);
       emitSiteEvent('quote_form_success', { service: payload.services.join('+') || 'unknown' });
       quoteForm.reset();
       servicePicker?.removeAttribute('aria-invalid');
+      contactPicker?.removeAttribute('aria-invalid');
       if (phone) phone.removeAttribute('aria-invalid');
+      if (emailField) emailField.removeAttribute('aria-invalid');
     } catch (error) {
       emitSiteEvent('quote_form_error');
       const failureMessage = error && error.name === 'AbortError'
