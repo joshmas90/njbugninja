@@ -79,7 +79,7 @@ function load_smtp_config(): array {
     ];
 }
 
-function send_smtp_mail(string $recipient, string $subject, string $body): void {
+function send_smtp_mail(string $recipient, string $subject, string $body, string $replyTo = ''): void {
     $smtp = load_smtp_config();
     $remote = 'ssl://' . $smtp['host'] . ':' . $smtp['port'];
 
@@ -120,11 +120,12 @@ function send_smtp_mail(string $recipient, string $subject, string $body): void 
         smtp_command($socket, 'DATA', [354]);
 
         $safeSubject = str_replace(["\r", "\n"], ' ', $subject);
+        $replyAddress = filter_var($replyTo, FILTER_VALIDATE_EMAIL) !== false ? $replyTo : $smtp['user'];
         $headers = [
             'Date: ' . date(DATE_RFC2822),
             'From: Mosquito Ninja Website <' . $smtp['user'] . '>',
             'To: <' . $recipient . '>',
-            'Reply-To: ' . $smtp['user'],
+            'Reply-To: ' . $replyAddress,
             'Subject: ' . $safeSubject,
             'MIME-Version: 1.0',
             'Content-Type: text/plain; charset=UTF-8',
@@ -186,7 +187,9 @@ if (trim((string)($data['website'] ?? '')) !== '') {
 
 $name = clean_field($data['name'] ?? '', 120);
 $phone = clean_field($data['phone'] ?? '', 30);
+$email = clean_field($data['email'] ?? '', 254);
 $location = clean_field($data['location'] ?? '', 120);
+$contactPreferenceKey = clean_field($data['contactPreference'] ?? '', 30);
 $serviceInput = $data['services'] ?? ($data['service'] ?? []);
 $serviceKeys = is_array($serviceInput) ? $serviceInput : [$serviceInput];
 $serviceKeys = array_values(array_unique(array_filter(array_map(
@@ -217,27 +220,49 @@ $propertyTypes = [
     'government' => 'Government / municipal',
 ];
 
+$contactPreferences = [
+    'text' => 'Text',
+    'call' => 'Call',
+    'email' => 'Email',
+    'no-preference' => 'No preference',
+];
+
 $phoneDigits = preg_replace('/\\D+/', '', $phone) ?? '';
 $phoneIsValid = strlen($phoneDigits) === 10 ||
     (strlen($phoneDigits) === 11 && str_starts_with($phoneDigits, '1'));
+$emailIsValid = $email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+$providedPhoneIsValid = $phone === '' || $phoneIsValid;
+$providedEmailIsValid = $email === '' || $emailIsValid;
 $hasMixedUnsureSelection = in_array('unsure', $serviceKeys, true) && count($serviceKeys) > 1;
+$contactPreferenceIsValid = array_key_exists($contactPreferenceKey, $contactPreferences);
+$contactMethodMatches = match ($contactPreferenceKey) {
+    'text', 'call' => $phoneIsValid,
+    'email' => $emailIsValid,
+    'no-preference' => $phoneIsValid || $emailIsValid,
+    default => false,
+};
+
 if (
     $name === '' ||
     $location === '' ||
-    !$phoneIsValid ||
+    !$providedPhoneIsValid ||
+    !$providedEmailIsValid ||
+    !$contactPreferenceIsValid ||
+    !$contactMethodMatches ||
     count($serviceKeys) < 1 ||
     count($serviceKeys) > 4 ||
     $hasMixedUnsureSelection ||
     count(array_filter($serviceKeys, static fn($key): bool => !array_key_exists($key, $services))) > 0 ||
     !array_key_exists($propertyTypeKey, $propertyTypes)
 ) {
-    respond(422, ['ok' => false, 'message' => 'Please complete your name, a valid U.S. phone number, town/ZIP, service and property type.']);
+    respond(422, ['ok' => false, 'message' => 'Please check your contact details, preferred reply method, town/ZIP, service and property type.']);
 }
 
 $recipient = QUOTE_RECIPIENT;
 $serviceLabels = array_map(static fn($key): string => $services[$key], $serviceKeys);
 $service = implode(', ', $serviceLabels);
 $propertyType = $propertyTypes[$propertyTypeKey];
+$contactPreference = $contactPreferences[$contactPreferenceKey];
 $subjectLocation = preg_replace('/[\r\n]+/', ' ', $location) ?? $location;
 $subject = 'New Website Quote - ' . $service . ' - ' . $subjectLocation;
 if (mb_strlen($subject) > 180) {
@@ -246,7 +271,9 @@ if (mb_strlen($subject) > 180) {
 
 $body = "New Mosquito Ninja website quote request\n\n"
     . "Name: {$name}\n"
-    . "Phone: {$phone}\n"
+    . "Preferred contact: {$contactPreference}\n"
+    . "Phone: " . ($phone !== '' ? $phone : '(not provided)') . "\n"
+    . "Email: " . ($email !== '' ? $email : '(not provided)') . "\n"
     . "Town / ZIP: {$location}\n"
     . "Services: {$service}\n"
     . "Property type: {$propertyType}\n\n"
@@ -255,7 +282,7 @@ $body = "New Mosquito Ninja website quote request\n\n"
     . "Source: https://njbugninja.com/\n";
 
 try {
-    send_smtp_mail($recipient, $subject, $body);
+    send_smtp_mail($recipient, $subject, $body, $email);
 } catch (Throwable $error) {
     error_log('Mosquito Ninja quote SMTP error: ' . $error->getMessage());
     respond(503, [
@@ -266,5 +293,5 @@ try {
 
 respond(200, [
     'ok' => true,
-    'message' => 'Your quote request was accepted for delivery to service@njbugninja.com. Mosquito Ninja will follow up using the phone number you provided.',
+    'message' => 'Your quote request was accepted for delivery to service@njbugninja.com. Mosquito Ninja will follow up using your preferred contact method.',
 ]);
