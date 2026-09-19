@@ -12,6 +12,12 @@
     commercial: 'Commercial / business',
     government: 'Government / municipal'
   };
+  const contactPreferenceNames = {
+    text: 'Text',
+    call: 'Call',
+    email: 'Email',
+    'no-preference': 'No preference'
+  };
   const clean = value => String(value || '').trim();
 
   function addStructuredData(id, data) {
@@ -182,7 +188,10 @@
 
   function buildQuote(values) {
     return `Hi Mosquito Ninja, I'd like a property quote.\n\n` +
-      `Name: ${clean(values.name)}\nPhone: ${clean(values.phone)}\n` +
+      `Name: ${clean(values.name)}\n` +
+      `Preferred contact: ${contactPreferenceNames[values.contactPreference] || 'Not specified'}\n` +
+      `Phone: ${clean(values.phone) || 'Not provided'}\n` +
+      `Email: ${clean(values.email) || 'Not provided'}\n` +
       `Town/ZIP: ${clean(values.location)}\n` +
       `Services: ${(Array.isArray(values.services) ? values.services : [values.service]).filter(Boolean).map(value => serviceNames[value] || value).join(', ') || 'Not specified'}\n` +
       `Property type: ${propertyTypeNames[values.propertyType] || propertyTypeNames.residential}\n` +
@@ -318,7 +327,9 @@
   const form = document.querySelector('#quote-form');
   if (form) {
     const status = document.querySelector('#quote-status');
-    const fields = Object.fromEntries(['name', 'phone', 'location', 'propertyType', 'message'].map(name => [name, form.elements.namedItem(name)]));
+    const fields = Object.fromEntries(['name', 'phone', 'email', 'location', 'propertyType', 'message'].map(name => [name, form.elements.namedItem(name)]));
+    const contactFields = [...form.querySelectorAll('input[name="contactPreference"]')];
+    const contactPicker = form.querySelector('.contact-picker');
     const serviceFields = [...form.querySelectorAll('input[name="service"]')];
     const servicePicker = form.querySelector('.service-picker');
     const params = new URLSearchParams(window.location.search);
@@ -339,26 +350,69 @@
     const zip = clean(params.get('zip'));
     if (!fields.location.value && /^\d{5}$/.test(zip)) fields.location.value = zip;
     if (county && !fields.location.value) status.textContent = `For your property in ${county.slice(0, 70)}, add the town or ZIP below.`;
-    ['name', 'phone', 'location'].forEach(name => {
+    ['name', 'phone', 'email', 'location'].forEach(name => {
       fields[name].addEventListener('input', () => {
         fields[name].setCustomValidity('');
         fields[name].removeAttribute('aria-invalid');
         status.textContent = '';
       });
     });
+    contactFields.forEach(field => field.addEventListener('change', () => {
+      contactPicker?.removeAttribute('aria-invalid');
+      fields.phone.setCustomValidity('');
+      fields.email.setCustomValidity('');
+      fields.phone.removeAttribute('aria-invalid');
+      fields.email.removeAttribute('aria-invalid');
+      status.textContent = '';
+    }));
     serviceFields.forEach(field => field.addEventListener('change', () => {
       servicePicker?.removeAttribute('aria-invalid');
       status.textContent = '';
     }));
     function preparedRequest() {
+      const phoneDigits = fields.phone.value.replace(/\D/g, '');
+      const validPhone = phoneDigits.length === 10 || (phoneDigits.length === 11 && phoneDigits.startsWith('1'));
+      fields.email.setCustomValidity('');
+      const validEmail = clean(fields.email.value) && !fields.email.validity.typeMismatch;
+      const selectedContact = contactFields.find(field => field.checked)?.value || '';
+
       fields.name.setCustomValidity(clean(fields.name.value) ? '' : 'Please enter your name.');
       fields.location.setCustomValidity(clean(fields.location.value) ? '' : 'Please enter the property town or ZIP code.');
-      fields.phone.setCustomValidity(fields.phone.value.replace(/\D/g, '').length >= 10 ? '' : 'Please enter a complete phone number, including area code.');
-      for (const name of ['name', 'phone', 'location']) fields[name].setAttribute('aria-invalid', String(!fields[name].validity.valid));
-      if (!form.reportValidity()) {
-        status.textContent = 'Please check the highlighted contact details.';
+
+      if (!selectedContact) {
+        contactPicker?.setAttribute('aria-invalid', 'true');
+        status.textContent = 'Choose how you would prefer Mosquito Ninja to reply.';
+        contactFields[0]?.focus();
         return null;
       }
+      contactPicker?.removeAttribute('aria-invalid');
+
+      let phoneMessage = '';
+      if (clean(fields.phone.value) && !validPhone) {
+        phoneMessage = 'Please enter a valid 10-digit U.S. phone number.';
+      } else if ((selectedContact === 'text' || selectedContact === 'call') && !validPhone) {
+        phoneMessage = 'A valid phone number is required for your preferred contact method.';
+      } else if (selectedContact === 'no-preference' && !validPhone && !validEmail) {
+        phoneMessage = 'Enter a valid phone number or email address so we can respond.';
+      }
+      fields.phone.setCustomValidity(phoneMessage);
+
+      let emailMessage = '';
+      if (clean(fields.email.value) && !validEmail) {
+        emailMessage = 'Please enter a valid email address.';
+      } else if (selectedContact === 'email' && !validEmail) {
+        emailMessage = 'A valid email address is required when Email is your preferred contact method.';
+      }
+      fields.email.setCustomValidity(emailMessage);
+
+      for (const name of ['name', 'phone', 'email', 'location']) {
+        fields[name].setAttribute('aria-invalid', String(!fields[name].validity.valid));
+      }
+      if (!form.reportValidity()) {
+        status.textContent = 'Please check the highlighted details so we can reply the way you prefer.';
+        return null;
+      }
+
       const selectedServices = serviceFields.filter(field => field.checked).map(field => field.value);
       if (!selectedServices.length) {
         servicePicker?.setAttribute('aria-invalid', 'true');
@@ -366,7 +420,14 @@
         serviceFields[0]?.focus();
         return null;
       }
+      if (selectedServices.includes('unsure') && selectedServices.length > 1) {
+        servicePicker?.setAttribute('aria-invalid', 'true');
+        status.textContent = 'Choose specific services, or choose “Not sure / discuss my property” by itself.';
+        return null;
+      }
+
       const values = Object.fromEntries(Object.entries(fields).map(([name, field]) => [name, field.value]));
+      values.contactPreference = selectedContact;
       values.services = selectedServices;
       return buildQuote(values);
     }
