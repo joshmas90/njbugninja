@@ -353,7 +353,15 @@ if (quoteForm) {
   const submitButton = quoteForm.querySelector('button[type="submit"]');
   const status = quoteForm.querySelector('#quote-status');
   const note = quoteForm.querySelector('.form-note');
+  const nameField = quoteForm.elements.namedItem('name');
   const phone = quoteForm.elements.namedItem('phone');
+  const locationField = quoteForm.elements.namedItem('location');
+  const serviceInputs = [...quoteForm.querySelectorAll('input[name="service"]')];
+  const servicePicker = quoteForm.querySelector('.service-picker');
+  const isValidUsPhone = value => {
+    const digits = String(value || '').replace(/\D/g, '');
+    return digits.length === 10 || (digits.length === 11 && digits.startsWith('1'));
+  };
   const setQuoteStatus = (state, title, message, shouldFocus = false) => {
     if (!status) return;
 
@@ -413,14 +421,51 @@ if (quoteForm) {
   honeypot.style.height = '1px';
   quoteForm.appendChild(honeypot);
 
+  [nameField, phone, locationField].forEach(field => {
+    if (!field) return;
+    field.addEventListener('input', () => {
+      field.setCustomValidity('');
+      field.removeAttribute('aria-invalid');
+    });
+  });
+
+  serviceInputs.forEach(input => {
+    input.addEventListener('change', () => {
+      if (input.checked && input.value === 'unsure') {
+        serviceInputs.forEach(other => {
+          if (other !== input) other.checked = false;
+        });
+      } else if (input.checked) {
+        const unsure = serviceInputs.find(other => other.value === 'unsure');
+        if (unsure) unsure.checked = false;
+      }
+      servicePicker?.removeAttribute('aria-invalid');
+    });
+  });
+
   quoteForm.addEventListener('submit', async event => {
     event.preventDefault();
     event.stopImmediatePropagation();
 
+    const trimmedName = nameField ? nameField.value.trim() : '';
+    const trimmedLocation = locationField ? locationField.value.trim() : '';
+
+    if (nameField) {
+      const validName = trimmedName.length > 0;
+      nameField.setCustomValidity(validName ? '' : 'Please enter your name.');
+      nameField.setAttribute('aria-invalid', String(!validName));
+    }
+
+    if (locationField) {
+      const validLocation = trimmedLocation.length > 0;
+      locationField.setCustomValidity(validLocation ? '' : 'Please enter your town or ZIP code.');
+      locationField.setAttribute('aria-invalid', String(!validLocation));
+    }
+
     if (phone) {
-      const enoughDigits = phone.value.replace(/\D/g, '').length >= 10;
-      phone.setCustomValidity(enoughDigits ? '' : 'Please enter a complete phone number, including area code.');
-      phone.setAttribute('aria-invalid', String(!enoughDigits));
+      const validPhone = isValidUsPhone(phone.value);
+      phone.setCustomValidity(validPhone ? '' : 'Please enter a valid 10-digit U.S. phone number, including area code.');
+      phone.setAttribute('aria-invalid', String(!validPhone));
     }
 
     if (!quoteForm.reportValidity() || !submitButton) {
@@ -429,9 +474,10 @@ if (quoteForm) {
       return;
     }
 
-    const serviceInputs = [...quoteForm.querySelectorAll('input[name="service"]')];
+    if (nameField) nameField.value = trimmedName;
+    if (locationField) locationField.value = trimmedLocation;
+
     const selectedServices = serviceInputs.filter(input => input.checked).map(input => input.value);
-    const servicePicker = quoteForm.querySelector('.service-picker');
     if (!selectedServices.length) {
       servicePicker?.setAttribute('aria-invalid', 'true');
       setQuoteStatus('warning', 'SELECT A SERVICE', 'Select at least one service, or choose “Not sure / discuss my property.”');
@@ -439,6 +485,15 @@ if (quoteForm) {
       emitSiteEvent('quote_form_validation_error');
       return;
     }
+
+    if (selectedServices.includes('unsure') && selectedServices.length > 1) {
+      servicePicker?.setAttribute('aria-invalid', 'true');
+      setQuoteStatus('warning', 'CHECK SERVICE SELECTION', 'Choose specific services, or choose “Not sure / discuss my property” by itself.');
+      serviceInputs.find(input => input.value === 'unsure')?.focus();
+      emitSiteEvent('quote_form_validation_error');
+      return;
+    }
+
     servicePicker?.removeAttribute('aria-invalid');
 
     const originalLabel = submitButton.textContent;
