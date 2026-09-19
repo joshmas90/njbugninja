@@ -47,7 +47,7 @@
   <link rel="stylesheet" href="/mosquito-ninja-v25-refinements.css?v=25.0.0">
   <link rel="stylesheet" href="/mosquito-ninja-v29-premium.css?v=31.0.0">
   <link rel="stylesheet" href="/mosquito-ninja-v32-products.css?v=32.0.0">
-  <link rel="stylesheet" href="/mosquito-ninja-v33-elite.css?v=36.1.0">
+  <link rel="stylesheet" href="/mosquito-ninja-v33-elite.css?v=36.2.0">
   <link rel="stylesheet" href="/mosquito-ninja-v34-fly.css?v=34.0.0">
 </head>
 <body>
@@ -221,14 +221,44 @@
     <div class="shell quote-grid">
       <div><p class="eyebrow">READY TO TAKE BACK THE YARD?</p><h2>PEST<br>PROBLEM?<br><em>SEND IN THE<br>NINJA.</em></h2><p>Send your town or ZIP code, the outdoor areas you use and where you&rsquo;re noticing mosquitoes, ticks or outdoor fly pressure. Owner-operated service keeps the process direct from quote through treatment.</p><div class="callout"><small>CALL OR TEXT</small><a href="tel:+16093136317">609-313-6317</a></div></div>
       <form class="quote-form" id="quote-form">
-        <div class="field-row"><label>NAME<input name="name" type="text" autocomplete="name" maxlength="120" placeholder="Your name" required></label><label>PHONE<input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="(609) 555-0123" required></label></div>
-        <div class="field-row"><label>TOWN / ZIP<input name="location" type="text" maxlength="120" placeholder="Town or ZIP code" required></label><label>PROPERTY TYPE<select name="propertyType"><option value="residential">Residential</option><option value="commercial">Commercial / business</option><option value="government">Government / municipal</option></select></label></div><fieldset class="service-picker"><legend>SERVICES YOU’RE INTERESTED IN</legend><p class="service-picker__hint">Select all that apply.</p><div class="service-picker__grid"><label><input type="checkbox" name="service" value="mosquito"><span>Mosquito control</span></label><label><input type="checkbox" name="service" value="tick"><span>Tick control</span></label><label><input type="checkbox" name="service" value="fly"><span>Outdoor fly control</span></label><label><input type="checkbox" name="service" value="unsure"><span>Not sure / discuss my property</span></label></div></fieldset>
+        <div class="field-row">
+          <label>NAME<input name="name" type="text" autocomplete="name" maxlength="120" placeholder="Your name" required></label>
+          <label>PHONE <span class="field-context">FOR CALL / TEXT</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="(609) 555-0123"></label>
+        </div>
+        <div class="field-row">
+          <label>EMAIL <span class="field-context">FOR EMAIL REPLIES</span><input name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com"></label>
+          <label>TOWN / ZIP<input name="location" type="text" autocomplete="postal-code" maxlength="120" placeholder="Town or ZIP code" required></label>
+        </div>
+        <label class="property-type-field">PROPERTY TYPE<select name="propertyType"><option value="residential">Residential</option><option value="commercial">Commercial / business</option><option value="government">Government / municipal</option></select></label>
+
+        <fieldset class="contact-picker" aria-describedby="contact-preference-hint">
+          <legend>HOW SHOULD WE REACH YOU?</legend>
+          <p class="contact-picker__hint" id="contact-preference-hint">Choose the reply method that works best for you. We’ll use it first.</p>
+          <div class="contact-picker__grid">
+            <label><input type="radio" name="contactPreference" value="text" required><span><strong>TEXT</strong><small>Fast, low-friction follow-up.</small></span></label>
+            <label><input type="radio" name="contactPreference" value="call"><span><strong>CALL</strong><small>Talk through the property.</small></span></label>
+            <label><input type="radio" name="contactPreference" value="email"><span><strong>EMAIL</strong><small>Keep the quote conversation in writing.</small></span></label>
+            <label><input type="radio" name="contactPreference" value="no-preference"><span><strong>NO PREFERENCE</strong><small>Use whichever contact detail I provide.</small></span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="service-picker">
+          <legend>SERVICES YOU’RE INTERESTED IN</legend>
+          <p class="service-picker__hint">Select all that apply.</p>
+          <div class="service-picker__grid">
+            <label><input type="checkbox" name="service" value="mosquito"><span>Mosquito control</span></label>
+            <label><input type="checkbox" name="service" value="tick"><span>Tick control</span></label>
+            <label><input type="checkbox" name="service" value="fly"><span>Outdoor fly control</span></label>
+            <label><input type="checkbox" name="service" value="unsure"><span>Not sure / discuss my property</span></label>
+          </div>
+        </fieldset>
+
         <label>TELL US ABOUT THE PROPERTY<textarea name="message" rows="5" maxlength="3000" placeholder="Backyard, pool area, wooded edge, trash or recycling area, patio, fly activity near bins, or other problem areas..."></textarea></label>
         <button class="btn primary full" type="submit">SEND QUOTE REQUEST &rarr;</button>
         <div id="quote-status" class="quote-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1" hidden><span class="quote-status__icon" aria-hidden="true"></span><span class="quote-status__content"><strong class="quote-status__title"></strong><span class="quote-status__message"></span></span></div>
         <button class="btn copy-request" type="button" id="copy-request">COPY REQUEST</button>
-        <div id="quote-copy-panel" hidden><label for="quote-copy-text">YOUR REQUEST</label><textarea id="quote-copy-text" rows="8" readonly></textarea></div>
-        <p class="form-note">Quote requests go directly to <strong>service@njbugninja.com</strong>. A sent or not-sent confirmation appears immediately after submission.</p>
+        <div id="quote-copy-panel" hidden><label for="quote-copy-text">YOUR REQUEST</label><textarea id="quote-copy-text" rows="10" readonly></textarea></div>
+        <p class="form-note">Your contact preference travels with the quote. Details go directly to <strong>service@njbugninja.com</strong> and are used to respond to your request.</p>
       </form>
     </div>
   </section>
@@ -242,6 +272,6 @@
   <div class="shell footer-bottom"><span>&copy; <span id="year">2026</span> Mosquito Ninja. All rights reserved.</span><a href="/privacy.html">Privacy</a></div>
 </footer>
 <nav class="mobile-actions" aria-label="Quick contact"><a href="tel:+16093136317">CALL MOSQUITO NINJA</a><a href="/#quote">REQUEST A QUOTE</a></nav>
-<script src="/mosquito-ninja-v12.js?v=36.2.0"></script>
-<script src="/website-tools.js?v=35.3.0"></script></body>
+<script src="/mosquito-ninja-v12.js?v=36.3.0"></script>
+<script src="/website-tools.js?v=36.3.0"></script></body>
 </html>
