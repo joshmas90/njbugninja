@@ -354,29 +354,52 @@ if (quoteForm) {
   const status = quoteForm.querySelector('#quote-status');
   const note = quoteForm.querySelector('.form-note');
   const phone = quoteForm.elements.namedItem('phone');
-  const statusIcon = status?.querySelector('.quote-status__icon');
-  const statusTitle = status?.querySelector('.quote-status__title');
-  const statusMessage = status?.querySelector('.quote-status__message');
-
   const setQuoteStatus = (state, title, message, shouldFocus = false) => {
     if (!status) return;
+
+    let icon = status.querySelector('.quote-status__icon');
+    let content = status.querySelector('.quote-status__content');
+    let titleNode = status.querySelector('.quote-status__title');
+    let messageNode = status.querySelector('.quote-status__message');
+
+    // Rebuild the feedback UI defensively so stale cached markup can never
+    // leave an empty colored confirmation bar.
+    if (!icon || !content || !titleNode || !messageNode) {
+      status.replaceChildren();
+
+      icon = document.createElement('span');
+      icon.className = 'quote-status__icon';
+      icon.setAttribute('aria-hidden', 'true');
+
+      content = document.createElement('span');
+      content.className = 'quote-status__content';
+
+      titleNode = document.createElement('strong');
+      titleNode.className = 'quote-status__title';
+
+      messageNode = document.createElement('span');
+      messageNode.className = 'quote-status__message';
+
+      content.append(titleNode, messageNode);
+      status.append(icon, content);
+    }
+
     status.hidden = false;
     status.dataset.state = state;
     status.setAttribute('role', state === 'error' ? 'alert' : 'status');
-    if (statusIcon) {
-      statusIcon.textContent =
-        state === 'success' ? '✓' :
-        state === 'error' || state === 'warning' ? '!' : '…';
-    }
-    if (statusTitle) statusTitle.textContent = title;
-    if (statusMessage) statusMessage.textContent = message;
+    icon.textContent =
+      state === 'success' ? '✓' :
+      state === 'error' || state === 'warning' ? '!' : '…';
+    titleNode.textContent = title;
+    messageNode.textContent = message;
+
     if (shouldFocus) {
       window.requestAnimationFrame(() => status.focus({ preventScroll: false }));
     }
   };
 
   if (submitButton) submitButton.textContent = 'SEND QUOTE REQUEST →';
-  if (note) note.innerHTML = 'Submitting sends these details directly to <strong>service@njbugninja.com</strong>. You will get a clear sent or not-sent confirmation here. Prefer text? You can still copy the prepared request or call/text 609-313-6317.';
+  if (note) note.innerHTML = 'Quote requests go directly to <strong>service@njbugninja.com</strong>. A sent or not-sent confirmation appears immediately after submission.';
 
   const honeypot = document.createElement('input');
   honeypot.type = 'text';
