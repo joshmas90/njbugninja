@@ -217,17 +217,21 @@ $propertyTypes = [
     'government' => 'Government / municipal',
 ];
 
-$phoneDigits = preg_replace('/\D+/', '', $phone) ?? '';
+$phoneDigits = preg_replace('/\\D+/', '', $phone) ?? '';
+$phoneIsValid = strlen($phoneDigits) === 10 ||
+    (strlen($phoneDigits) === 11 && str_starts_with($phoneDigits, '1'));
+$hasMixedUnsureSelection = in_array('unsure', $serviceKeys, true) && count($serviceKeys) > 1;
 if (
     $name === '' ||
     $location === '' ||
-    strlen($phoneDigits) < 10 ||
+    !$phoneIsValid ||
     count($serviceKeys) < 1 ||
     count($serviceKeys) > 4 ||
+    $hasMixedUnsureSelection ||
     count(array_filter($serviceKeys, static fn($key): bool => !array_key_exists($key, $services))) > 0 ||
     !array_key_exists($propertyTypeKey, $propertyTypes)
 ) {
-    respond(422, ['ok' => false, 'message' => 'Please complete your name, phone number, town/ZIP, service and property type.']);
+    respond(422, ['ok' => false, 'message' => 'Please complete your name, a valid U.S. phone number, town/ZIP, service and property type.']);
 }
 
 $recipient = QUOTE_RECIPIENT;
