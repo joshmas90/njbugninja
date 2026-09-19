@@ -592,3 +592,72 @@ html{scroll-behavior:auto!important}
 @media(prefers-reduced-motion:reduce){
   .contact-sheet,.contact-sheet-backdrop{scroll-behavior:auto}
 }
+
+
+/* V36 — unmistakable quote delivery confirmation. */
+.quote-status{
+  margin:14px 0 0;
+  padding:16px 17px;
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr);
+  align-items:start;
+  gap:13px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:13px;
+  color:#fff;
+  background:rgba(4,8,5,.72);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 14px 34px rgba(0,0,0,.18);
+}
+.quote-status[hidden]{display:none!important}
+.quote-status__icon{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:50%;
+  font:900 1.2rem/1 var(--display);
+}
+.quote-status__content{display:grid;gap:3px;min-width:0}
+.quote-status__title{
+  font-family:var(--display);
+  font-size:1.08rem;
+  font-weight:900;
+  letter-spacing:.035em;
+  line-height:1.05;
+}
+.quote-status__message{
+  color:#c8cfca;
+  font-size:.88rem;
+  line-height:1.55;
+}
+.quote-status[data-state="loading"]{border-color:rgba(255,255,255,.22)}
+.quote-status[data-state="loading"] .quote-status__icon{color:#fff}
+.quote-status[data-state="warning"]{border-color:rgba(230,184,74,.62);background:rgba(35,27,5,.72)}
+.quote-status[data-state="warning"] .quote-status__icon{color:#f2cb66;border-color:rgba(242,203,102,.58)}
+.quote-status[data-state="success"]{
+  border-color:rgba(143,189,46,.72);
+  background:linear-gradient(135deg,rgba(24,48,17,.94),rgba(7,16,9,.9));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 14px 38px rgba(79,124,30,.16);
+}
+.quote-status[data-state="success"] .quote-status__icon{
+  color:#c9ef73;
+  border-color:rgba(183,227,88,.68);
+  background:rgba(143,189,46,.12);
+}
+.quote-status[data-state="error"]{
+  border-color:rgba(224,32,39,.78);
+  background:linear-gradient(135deg,rgba(65,12,15,.94),rgba(22,5,7,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 14px 38px rgba(224,32,39,.14);
+}
+.quote-status[data-state="error"] .quote-status__icon{
+  color:#ff7d83;
+  border-color:rgba(255,90,97,.68);
+  background:rgba(224,32,39,.12);
+}
+.quote-status:focus{outline:none}
+.quote-status:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media(max-width:560px){
+  .quote-status{grid-template-columns:38px minmax(0,1fr);padding:14px}
+  .quote-status__icon{width:38px;height:38px}
+}

@@ -354,9 +354,29 @@ if (quoteForm) {
   const status = quoteForm.querySelector('#quote-status');
   const note = quoteForm.querySelector('.form-note');
   const phone = quoteForm.elements.namedItem('phone');
+  const statusIcon = status?.querySelector('.quote-status__icon');
+  const statusTitle = status?.querySelector('.quote-status__title');
+  const statusMessage = status?.querySelector('.quote-status__message');
+
+  const setQuoteStatus = (state, title, message, shouldFocus = false) => {
+    if (!status) return;
+    status.hidden = false;
+    status.dataset.state = state;
+    status.setAttribute('role', state === 'error' ? 'alert' : 'status');
+    if (statusIcon) {
+      statusIcon.textContent =
+        state === 'success' ? '✓' :
+        state === 'error' || state === 'warning' ? '!' : '…';
+    }
+    if (statusTitle) statusTitle.textContent = title;
+    if (statusMessage) statusMessage.textContent = message;
+    if (shouldFocus) {
+      window.requestAnimationFrame(() => status.focus({ preventScroll: false }));
+    }
+  };
 
   if (submitButton) submitButton.textContent = 'SEND QUOTE REQUEST →';
-  if (note) note.textContent = 'Submitting sends these details to Mosquito Ninja’s company inbox. Prefer text? You can still copy the prepared request or call/text 609-313-6317.';
+  if (note) note.innerHTML = 'Submitting sends these details directly to <strong>service@njbugninja.com</strong>. You will get a clear sent or not-sent confirmation here. Prefer text? You can still copy the prepared request or call/text 609-313-6317.';
 
   const honeypot = document.createElement('input');
   honeypot.type = 'text';
@@ -381,7 +401,7 @@ if (quoteForm) {
     }
 
     if (!quoteForm.reportValidity() || !submitButton) {
-      if (status) status.textContent = 'Please check the highlighted contact details.';
+      setQuoteStatus('warning', 'CHECK REQUIRED DETAILS', 'Please check the highlighted contact details before sending.');
       emitSiteEvent('quote_form_validation_error');
       return;
     }
@@ -391,7 +411,7 @@ if (quoteForm) {
     const servicePicker = quoteForm.querySelector('.service-picker');
     if (!selectedServices.length) {
       servicePicker?.setAttribute('aria-invalid', 'true');
-      if (status) status.textContent = 'Select at least one service, or choose “Not sure / discuss my property.”';
+      setQuoteStatus('warning', 'SELECT A SERVICE', 'Select at least one service, or choose “Not sure / discuss my property.”');
       serviceInputs[0]?.focus();
       emitSiteEvent('quote_form_validation_error');
       return;
@@ -402,7 +422,7 @@ if (quoteForm) {
     submitButton.disabled = true;
     submitButton.textContent = 'SENDING…';
     quoteForm.setAttribute('aria-busy', 'true');
-    if (status) status.textContent = 'Sending your quote request to Mosquito Ninja…';
+    setQuoteStatus('loading', 'SENDING QUOTE REQUEST', 'Connecting securely to Mosquito Ninja’s company inbox…');
 
     const formData = new FormData(quoteForm);
     const payload = Object.fromEntries([...formData.entries()].filter(([key]) => key !== 'service'));
@@ -425,18 +445,17 @@ if (quoteForm) {
       try { result = await response.json(); } catch { result = {}; }
       if (!response.ok || !result.ok) throw new Error(result.message || 'Quote delivery failed');
 
-      if (status) status.textContent = result.message || 'Request sent. Mosquito Ninja will review the property details and follow up using the phone number you provided to discuss availability and next steps.';
+      setQuoteStatus('success', 'QUOTE REQUEST SENT', result.message || 'Your quote request was accepted for delivery to service@njbugninja.com. Mosquito Ninja will review the property details and follow up using the phone number you provided.', true);
       emitSiteEvent('quote_form_success', { service: payload.services.join('+') || 'unknown' });
       quoteForm.reset();
       servicePicker?.removeAttribute('aria-invalid');
       if (phone) phone.removeAttribute('aria-invalid');
     } catch (error) {
       emitSiteEvent('quote_form_error');
-      if (status) {
-        status.textContent = error && error.name === 'AbortError'
-          ? 'The request took too long to send. Please use Copy request or call/text 609-313-6317.'
-          : 'We could not email the request right now. Please use Copy request or call/text 609-313-6317.';
-      }
+      const failureMessage = error && error.name === 'AbortError'
+        ? 'The request timed out and was not confirmed as sent. Please use Copy request or call/text 609-313-6317.'
+        : 'The quote request was not sent. Please use Copy request or call/text 609-313-6317.';
+      setQuoteStatus('error', 'QUOTE REQUEST NOT SENT', failureMessage, true);
     } finally {
       window.clearTimeout(timeout);
       submitButton.disabled = false;

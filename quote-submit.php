@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+const QUOTE_RECIPIENT = 'service@njbugninja.com';
+
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
@@ -228,7 +230,7 @@ if (
     respond(422, ['ok' => false, 'message' => 'Please complete your name, phone number, town/ZIP, service and property type.']);
 }
 
-$recipient = 'service@njbugninja.com';
+$recipient = QUOTE_RECIPIENT;
 $serviceLabels = array_map(static fn($key): string => $services[$key], $serviceKeys);
 $service = implode(', ', $serviceLabels);
 $propertyType = $propertyTypes[$propertyTypeKey];
@@ -254,11 +256,11 @@ try {
     error_log('Mosquito Ninja quote SMTP error: ' . $error->getMessage());
     respond(503, [
         'ok' => false,
-        'message' => 'Email delivery is temporarily unavailable. Please call or text 609-313-6317.',
+        'message' => 'Quote request was NOT sent. Email delivery is temporarily unavailable. Please call or text 609-313-6317.',
     ]);
 }
 
 respond(200, [
     'ok' => true,
-    'message' => 'Request sent. Mosquito Ninja will follow up using the phone number you provided.',
+    'message' => 'Your quote request was accepted for delivery to service@njbugninja.com. Mosquito Ninja will follow up using the phone number you provided.',
 ]);
