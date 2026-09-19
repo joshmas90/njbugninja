@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { buildQuote, evaluateCoverage, loadCoverageConfig } = require('../website-tools.js');
+const { buildQuote, copyInstructions, evaluateCoverage, loadCoverageConfig } = require('../website-tools.js');
 const liveRules = require('../service-area-config.json');
 
 test('current configured counties retain their actual coverage', () => {
@@ -45,6 +45,36 @@ test('multi-service and property type choices have readable labels', () => {
   assert.match(buildQuote({ services: ['unsure'], propertyType: 'residential' }), /Services: Not sure \/ discuss my property/);
   assert.match(buildQuote({ services: [], propertyType: 'invalid' }), /Services: Not specified/);
   assert.match(buildQuote({ services: [], propertyType: 'invalid' }), /Property type: Residential/);
+});
+
+test('copy instructions respect every reply preference and state that copying sends nothing', () => {
+  const expectations = {
+    email: /email to service@njbugninja\.com/,
+    text: /text to 609-313-6317/,
+    call: /call 609-313-6317/,
+    'no-preference': /text to 609-313-6317 or an email/
+  };
+
+  for (const [preference, expectedDestination] of Object.entries(expectations)) {
+    const copied = copyInstructions(preference);
+    const selected = copyInstructions(preference, true);
+    assert.match(copied, expectedDestination);
+    assert.match(selected, expectedDestination);
+    assert.match(copied, /Copying does not send the request\./);
+    assert.match(selected, /Copying does not send the request\./);
+  }
+});
+
+test('FAQ and service-area reference copy cover outdoor fly service', () => {
+  const root = path.resolve(__dirname, '..');
+  const faq = fs.readFileSync(path.join(root, 'faq.html'), 'utf8');
+  const serviceArea = fs.readFileSync(path.join(root, 'service-area.html'), 'utf8');
+
+  assert.match(faq, /How does outdoor fly control work\?/);
+  assert.match(faq, /source, sanitation, resting and activity areas/);
+  assert.match(faq, /zero mosquitoes, ticks or outdoor flies/);
+  assert.match(serviceArea, /Outdoor fly control<\/a> starts with source, sanitation/);
+  assert.match(serviceArea, /mosquito, tick and targeted outdoor fly concerns/);
 });
 
 

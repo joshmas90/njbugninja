@@ -111,18 +111,18 @@
         mainEntity: [
           {
             '@type': 'Question',
-            name: 'Do you treat mosquitoes and ticks?',
+            name: 'Do you treat mosquitoes, ticks and outdoor flies?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Yes. Mosquito control and tick control are the core outdoor services. Tell us about both concerns when requesting a quote so the property can be discussed as a whole.'
+              text: 'Yes. Mosquito Ninja provides targeted outdoor mosquito, tick and nuisance-fly control. Share every concern in the quote request so the property can be discussed as a whole.'
             }
           },
           {
             '@type': 'Question',
-            name: 'Do you offer outdoor fly control?',
+            name: 'How does outdoor fly control work?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Yes. Targeted outdoor fly control is available for house-fly and nuisance-fly pressure around source, resting and activity areas. Source reduction is part of the property discussion.'
+              text: 'Outdoor fly service addresses house-fly and nuisance-fly pressure around relevant source, sanitation, resting and activity areas. Source reduction matters, and complete elimination is not promised.'
             }
           },
           {
@@ -159,7 +159,7 @@
           },
           {
             '@type': 'Question',
-            name: 'Do you guarantee zero outdoor pests?',
+            name: 'Do you guarantee zero mosquitoes, ticks or outdoor flies?',
             acceptedAnswer: {
               '@type': 'Answer',
               text: 'No. Outdoor pest pressure changes with weather, habitat, sanitation conditions and neighboring properties. Service is focused on reducing the pest problem without promising complete elimination.'
@@ -196,6 +196,23 @@
       `Services: ${(Array.isArray(values.services) ? values.services : [values.service]).filter(Boolean).map(value => serviceNames[value] || value).join(', ') || 'Not specified'}\n` +
       `Property type: ${propertyTypeNames[values.propertyType] || propertyTypeNames.residential}\n` +
       `Property details: ${clean(values.message)}`;
+  }
+
+  function copyInstructions(contactPreference, requiresManualCopy = false) {
+    const nextStep = {
+      email: 'Paste it into an email to service@njbugninja.com when you are ready.',
+      text: 'Paste it into a text to 609-313-6317 when you are ready.',
+      call: 'Keep it handy when you call 609-313-6317, or paste it into an email to service@njbugninja.com.',
+      'no-preference': 'Paste it into a text to 609-313-6317 or an email to service@njbugninja.com when you are ready.'
+    }[contactPreference] ||
+      'Paste it into a text to 609-313-6317 or an email to service@njbugninja.com when you are ready.';
+
+    if (requiresManualCopy) {
+      const continuedStep = nextStep.charAt(0).toLowerCase() + nextStep.slice(1);
+      return `Your request is selected below. Copy it, then ${continuedStep} Copying does not send the request.`;
+    }
+
+    return `Request copied. ${nextStep} Copying does not send the request.`;
   }
 
   function evaluateCoverage(config, county, zip) {
@@ -242,7 +259,7 @@
     }
   }
 
-  if (typeof module !== 'undefined' && module.exports) module.exports = { buildQuote, evaluateCoverage, loadCoverageConfig };
+  if (typeof module !== 'undefined' && module.exports) module.exports = { buildQuote, copyInstructions, evaluateCoverage, loadCoverageConfig };
   if (typeof document === 'undefined') return;
 
   enhanceStructuredData();
@@ -441,10 +458,11 @@
     document.querySelector('#copy-request').addEventListener('click', async () => {
       const message = preparedRequest();
       if (!message) return;
+      const selectedContact = contactFields.find(field => field.checked)?.value || '';
       try {
         if (!navigator.clipboard) throw new Error('Clipboard unavailable');
         await navigator.clipboard.writeText(message);
-        status.textContent = 'Request copied. Paste it into a text to 609-313-6317 when you are ready. Nothing has been sent.';
+        status.textContent = copyInstructions(selectedContact);
       } catch {
         const panel = document.querySelector('#quote-copy-panel');
         const text = document.querySelector('#quote-copy-text');
@@ -452,7 +470,7 @@
         text.value = message;
         text.focus();
         text.select();
-        status.textContent = 'Your request is selected below. Copy it and paste it into a text to 609-313-6317. Nothing has been sent.';
+        status.textContent = copyInstructions(selectedContact, true);
       }
     });
   }
