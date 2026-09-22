@@ -67,10 +67,9 @@
       .hero { min-height: 0; }
       .hero .hero-inner {
         display: block;
-        min-height: 660px;
-        min-height: clamp(610px, 86svh, 750px);
+        min-height: 0;
         padding-top: 145px;
-        padding-bottom: 66px;
+        padding-bottom: 54px;
       }
       .hero .hero-copy { width: 100%; max-width: 100%; padding: 0; }
       .hero .eyebrow { max-width: 100%; margin-bottom: 18px; }
@@ -82,7 +81,7 @@
         text-wrap: balance;
       }
       .hero .hero-lede--phone {
-        max-width: min(89%, 320px);
+        max-width: min(100%, 510px);
         margin: 23px 0 0;
         font-size: clamp(14px, 3.85vw, 16px);
         line-height: 1.55;
@@ -99,16 +98,15 @@
 
       /* Show the eye and armor more clearly while maintaining a readable left text edge. */
       .hero .hero-art {
-        background-position: 60% 47%;
-        filter: saturate(1.04) contrast(1.04) brightness(1.03);
+        background-position: 59% center;
+        filter: saturate(.98) contrast(1.035) brightness(.96);
       }
       .hero .hero-art:before {
         background:
           linear-gradient(90deg,
-            rgba(5,7,6,.90) 0%,
-            rgba(5,7,6,.76) 27%,
-            rgba(5,7,6,.38) 57%,
-            rgba(5,7,6,.08) 100%),
+            rgba(6,8,7,.97) 0%,
+            rgba(6,8,7,.78) 58%,
+            rgba(6,8,7,.38) 100%),
           linear-gradient(0deg,rgba(5,7,6,.48),transparent 24%);
       }
 
