@@ -50,9 +50,84 @@
   <link rel="stylesheet" href="/mosquito-ninja-v33-elite.css?v=36.2.0">
   <link rel="stylesheet" href="/mosquito-ninja-v34-fly.css?v=34.0.0">
   <style>
-    /* Phones already have persistent Call / Request a Quote actions; avoid duplicating them in the hero. */
+    /* The iPhone hero is a brand moment: the persistent bottom bar handles calls and quotes.
+       All of these refinements are phone-width only; tablet and desktop are unchanged. */
+    .hero .hero-lede--phone,
+    .season-booking-mobile-section { display: none; }
+
     @media (max-width: 640px) {
       .hero .hero-actions { display: none; }
+      .hero .hero-lede--desktop,
+      .hero > .season-booking { display: none; }
+      .hero .hero-lede--phone,
+      .season-booking-mobile-section { display: block; }
+
+      /* Allow the text to use the screen width instead of the legacy 50%-wide copy column.
+         Place all text safely below the fixed navigation, even on short phone screens. */
+      .hero { min-height: 0; }
+      .hero .hero-inner {
+        display: block;
+        min-height: 660px;
+        min-height: clamp(610px, 86svh, 750px);
+        padding-top: 145px;
+        padding-bottom: 66px;
+      }
+      .hero .hero-copy { width: 100%; max-width: 100%; padding: 0; }
+      .hero .eyebrow { max-width: 100%; margin-bottom: 18px; }
+      .hero h1 {
+        max-width: 100%;
+        font-size: clamp(43px, 12.3vw, 54px);
+        line-height: .96;
+        letter-spacing: -.025em;
+        text-wrap: balance;
+      }
+      .hero .hero-lede--phone {
+        max-width: min(89%, 320px);
+        margin: 23px 0 0;
+        font-size: clamp(14px, 3.85vw, 16px);
+        line-height: 1.55;
+        text-wrap: pretty;
+        text-shadow: 0 2px 12px rgba(0,0,0,.55);
+      }
+      .hero .hero-meta {
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 26px;
+        font-size: .625rem;
+        line-height: 1.45;
+      }
+
+      /* Show the eye and armor more clearly while maintaining a readable left text edge. */
+      .hero .hero-art {
+        background-position: 60% 47%;
+        filter: saturate(1.04) contrast(1.04) brightness(1.03);
+      }
+      .hero .hero-art:before {
+        background:
+          linear-gradient(90deg,
+            rgba(5,7,6,.90) 0%,
+            rgba(5,7,6,.76) 27%,
+            rgba(5,7,6,.38) 57%,
+            rgba(5,7,6,.08) 100%),
+          linear-gradient(0deg,rgba(5,7,6,.48),transparent 24%);
+      }
+
+      /* The seasonal invitation gets its own strip below the mobile hero; no sticky-CTA collision. */
+      .season-booking-mobile-section {
+        position: relative;
+        z-index: 2;
+        padding: 24px 14px 32px;
+        background: linear-gradient(180deg,#0d130f,#080c09);
+        border-top: 1px solid rgba(224,32,39,.40);
+      }
+      .season-booking-mobile-section .season-booking {
+        position: relative;
+        inset: auto;
+        display: grid;
+        width: min(100%, 520px);
+        max-width: none;
+        margin: 0 auto;
+      }
     }
   </style>
 </head>
@@ -89,11 +164,21 @@
       <div class="hero-copy">
         <p class="eyebrow">SOUTH JERSEY OUTDOOR PEST CONTROL</p>
         <h1>THEY WON&rsquo;T<br><em>SEE US COMING.</em></h1>
-        <p class="hero-lede">Mosquitoes. Ticks. Outdoor flies. Consider them warned. Targeted mosquito, tick and outdoor fly control for South Jersey residential, commercial and government properties. One person quotes it, one person does it.</p>
+        <p class="hero-lede hero-lede--desktop">Mosquitoes. Ticks. Outdoor flies. Consider them warned. Targeted mosquito, tick and outdoor fly control for South Jersey residential, commercial and government properties. One person quotes it, one person does it.</p>
+        <p class="hero-lede hero-lede--phone">Mosquitoes. Ticks. Outdoor flies. Consider them warned. Targeted outdoor pest control for South Jersey homes, businesses and government properties.</p>
         <div class="hero-actions"><a class="btn primary" href="#quote">REQUEST A QUOTE <span>&rarr;</span></a><a class="btn ghost" href="tel:+16093136317">CALL MOSQUITO NINJA</a></div>
         <div class="hero-meta"><span>MOSQUITO</span><i></i><span>TICK</span><i></i><span>OUTDOOR FLY</span></div>
       </div>
     </div>
+    <a class="season-booking" href="#quote" aria-label="Spring 2027 route planning. Request Spring service.">
+      <span class="season-booking__energy" aria-hidden="true"></span>
+      <span class="season-booking__signal" aria-hidden="true"></span>
+      <span class="season-booking__message"><strong>SPRING 2027 ROUTE PLANNING</strong><span>Get ahead of the first spring pest-control routes.</span></span>
+      <span class="season-booking__action">REQUEST SPRING SERVICE <span aria-hidden="true">&rarr;</span></span>
+    </a>
+  </section>
+
+  <section class="season-booking-mobile-section" aria-label="Spring 2027 service">
     <a class="season-booking" href="#quote" aria-label="Spring 2027 route planning. Request Spring service.">
       <span class="season-booking__energy" aria-hidden="true"></span>
       <span class="season-booking__signal" aria-hidden="true"></span>
