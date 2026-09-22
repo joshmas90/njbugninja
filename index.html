@@ -69,7 +69,7 @@
         display: block;
         min-height: 0;
         padding-top: clamp(158px, 21svh, 193px);
-        padding-bottom: clamp(95px, 12svh, 130px);
+        padding-bottom: clamp(68px, 7.5svh, 76px);
       }
       .hero .eyebrow { width: 185px; white-space: normal; }
       .hero .eyebrow { font-size: .68rem; letter-spacing: .16em; }
@@ -117,7 +117,7 @@
       .season-booking-mobile-section {
         position: relative;
         z-index: 2;
-        padding: 24px 14px 120px;
+        padding: 0 14px 120px;
         background: linear-gradient(180deg,#0d130f,#080c09);
         border-top: 1px solid rgba(224,32,39,.40);
       }
@@ -127,7 +127,61 @@
         display: grid;
         width: min(100%, 520px);
         max-width: none;
+        min-height: 140px;
         margin: 0 auto;
+        padding: 17px 18px 16px;
+        grid-template-columns: 44px minmax(0,1fr);
+        grid-template-rows: auto auto;
+        column-gap: 14px;
+        row-gap: 8px;
+        align-items: center;
+        border-radius: 15px;
+      }
+      .season-booking-mobile-section .season-booking__signal { display:none; }
+      .season-booking-mobile-section .season-booking__campaign-icon {
+        display:grid;
+        grid-column:1;
+        grid-row:1 / span 2;
+        place-items:center;
+        width:42px;
+        height:48px;
+        color:#e02027;
+        align-self:start;
+        margin-top:5px;
+      }
+      .season-booking-mobile-section .season-booking__campaign-icon svg {
+        width:40px;
+        height:40px;
+        fill:currentColor;
+      }
+      .season-booking-mobile-section .season-booking__message {
+        grid-column:2;
+        grid-row:1;
+      }
+      .season-booking-mobile-section .season-booking__message strong {
+        font-size:.93rem;
+        letter-spacing:.055em;
+        line-height:1.08;
+      }
+      .season-booking-mobile-section .season-booking__message strong em {
+        color:#e02027;
+        font-style:normal;
+      }
+      .season-booking-mobile-section .season-booking__message > span {
+        margin-top:7px;
+        font-size:.72rem;
+        line-height:1.45;
+      }
+      .season-booking-mobile-section .season-booking__action {
+        grid-column:2;
+        grid-row:2;
+        min-height:32px;
+        margin-top:1px;
+        padding:11px 0 0;
+        border-top:1px solid rgba(255,255,255,.14);
+        border-left:0;
+        font-size:.69rem;
+        letter-spacing:.115em;
       }
     }
     .hero .hero-trust{
@@ -180,7 +234,7 @@
       background:rgba(255,255,255,.24);
     }
     @media (max-width:640px){
-      .hero .hero-trust{gap:10px;max-width:100%;margin-top:30px}
+      .hero .hero-trust{gap:8px;max-width:100%;margin-top:8px}
       .hero .hero-trust__item{gap:7px}
       .hero .hero-trust__icon{width:22px;height:22px;flex-basis:22px}
       .hero .hero-trust__icon svg{width:21px;height:21px}
@@ -189,6 +243,8 @@
       .hero .hero-trust__divider{height:28px}
     }
 
+    .season-booking__campaign-icon{display:none}
+    .season-booking__message strong em{font-style:normal;color:#e02027}
     /* Fall tick campaign: retain the existing responsive booking card styling. */
     .season-booking[data-prefill-service="tick"] .season-booking__signal {
       background: #9acb52;
@@ -246,8 +302,9 @@
     </div>
     <a class="season-booking" href="#quote" aria-label="Fall tick control. Send in the Ninja." data-prefill-service="tick">
       <span class="season-booking__energy" aria-hidden="true"></span>
+      <span class="season-booking__campaign-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.1 4.1 3.9-1.2-1.3 4.2 4 1.6-4.2 3.3.9 4.3-4.7-.8.2 4.8h-2.2l.2-4.8-4.7.8.9-4.3-4.2-3.3 4-1.6-1.3-4.2 3.9 1.2L12 2Z"/></svg></span>
       <span class="season-booking__signal" aria-hidden="true"></span>
-      <span class="season-booking__message"><strong>TICKS DON&rsquo;T TAKE THE FALL OFF.</strong><span>Neither do we. Ask Mosquito Ninja about targeted fall tick control for your property.</span></span>
+      <span class="season-booking__message"><strong>TICKS DON&rsquo;T TAKE <em>THE FALL OFF.</em></strong><span>Neither do we. Ask Mosquito Ninja about targeted fall tick control for your property.</span></span>
       <span class="season-booking__action">SEND IN THE NINJA <span aria-hidden="true">&rarr;</span></span>
     </a>
   </section>
@@ -255,8 +312,9 @@
   <section class="season-booking-mobile-section" aria-label="Fall deer tick service">
     <a class="season-booking" href="#quote" aria-label="Fall tick control. Send in the Ninja." data-prefill-service="tick">
       <span class="season-booking__energy" aria-hidden="true"></span>
+      <span class="season-booking__campaign-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.1 4.1 3.9-1.2-1.3 4.2 4 1.6-4.2 3.3.9 4.3-4.7-.8.2 4.8h-2.2l.2-4.8-4.7.8.9-4.3-4.2-3.3 4-1.6-1.3-4.2 3.9 1.2L12 2Z"/></svg></span>
       <span class="season-booking__signal" aria-hidden="true"></span>
-      <span class="season-booking__message"><strong>TICKS DON&rsquo;T TAKE THE FALL OFF.</strong><span>Neither do we. Ask Mosquito Ninja about targeted fall tick control for your property.</span></span>
+      <span class="season-booking__message"><strong>TICKS DON&rsquo;T TAKE <em>THE FALL OFF.</em></strong><span>Neither do we. Ask Mosquito Ninja about targeted fall tick control for your property.</span></span>
       <span class="season-booking__action">SEND IN THE NINJA <span aria-hidden="true">&rarr;</span></span>
     </a>
   </section>
@@ -436,7 +494,7 @@
   </div>
   <div class="shell footer-bottom"><span>&copy; <span id="year">2026</span> Mosquito Ninja. All rights reserved.</span><a href="/privacy.html">Privacy</a></div>
 </footer>
-<nav class="mobile-actions" aria-label="Quick contact"><a href="tel:+16093136317">CALL MOSQUITO NINJA</a><a href="/#quote">REQUEST A QUOTE</a></nav>
+<nav class="mobile-actions" aria-label="Quick contact"><a href="tel:+16093136317"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7.1 3.5 9.4 8 7.8 9.4c1 2.2 2.7 3.9 4.9 4.9l1.4-1.6 4.5 2.3-.7 3c-.2.8-.9 1.3-1.7 1.3C9.8 19.3 4.7 14.2 4.7 7.8c0-.8.5-1.5 1.3-1.7l1.1-2.6Z"/></svg><span>CALL MOSQUITO NINJA</span></a><a href="/#quote"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6V3Zm8 1.5V8h3.5M9 12h7M9 16h7"/></svg><span>REQUEST A QUOTE</span></a></nav>
 <script src="/mosquito-ninja-v12.js?v=36.3.0"></script>
 <script src="/website-tools.js?v=36.4.0"></script><script>
   document.querySelectorAll('.season-booking[data-prefill-service="tick"]').forEach(function (link) {
