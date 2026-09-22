@@ -49,6 +49,12 @@
   <link rel="stylesheet" href="/mosquito-ninja-v32-products.css?v=32.0.0">
   <link rel="stylesheet" href="/mosquito-ninja-v33-elite.css?v=36.2.0">
   <link rel="stylesheet" href="/mosquito-ninja-v34-fly.css?v=34.0.0">
+  <style>
+    /* Phones already have persistent Call / Request a Quote actions; avoid duplicating them in the hero. */
+    @media (max-width: 640px) {
+      .hero .hero-actions { display: none; }
+    }
+  </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
