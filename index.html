@@ -8,8 +8,8 @@
   </script>
   <link rel="preload" as="image" href="/assets/mark-transparent-v31.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="image" href="/assets/splash-wordmark-transparent-v31.webp" type="image/webp" fetchpriority="high">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080a09">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
   <!-- Privacy-friendly analytics by Plausible -->
   <script async src="https://plausible.io/js/pa-16WwUvUbovoyg0-tq4F9i.js"></script>
   <script>
@@ -44,7 +44,7 @@
   <link rel="stylesheet" href="/mosquito-ninja-v12.css?v=36.0.0">
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["Organization","LocalBusiness"],"@id":"https://njbugninja.com/#business","name":"Mosquito Ninja","alternateName":"NJ Bug Ninja","url":"https://njbugninja.com/","telephone":"+1-609-313-6317","email":"service@njbugninja.com","logo":{"@id":"https://njbugninja.com/#brand-image"},"description":"Owner-operated mosquito, tick and targeted outdoor fly control for South Jersey residential, commercial and government properties. Contact Mosquito Ninja to confirm route availability.","areaServed":[{"@type":"AdministrativeArea","name":"Burlington County, New Jersey"},{"@type":"AdministrativeArea","name":"Camden County, New Jersey"},{"@type":"AdministrativeArea","name":"Gloucester County, New Jersey"}],"image":{"@id":"https://njbugninja.com/#brand-image"}},{"@type":"WebSite","@id":"https://njbugninja.com/#website","name":"Mosquito Ninja","alternateName":"NJ Bug Ninja","url":"https://njbugninja.com/","inLanguage":"en-US","publisher":{"@id":"https://njbugninja.com/#business"}},{"@type":"WebPage","@id":"https://njbugninja.com/#webpage","url":"https://njbugninja.com/","name":"Mosquito, Tick & Fly Control in South Jersey | Mosquito Ninja","description":"Owner-operated mosquito, tick and targeted outdoor fly control for South Jersey homes, businesses and public properties. Check route availability and request a property quote.","inLanguage":"en-US","isPartOf":{"@id":"https://njbugninja.com/#website"},"about":{"@id":"https://njbugninja.com/#business"},"primaryImageOfPage":{"@id":"https://njbugninja.com/#brand-image"}},{"@type":"ImageObject","@id":"https://njbugninja.com/#brand-image","url":"https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg","contentUrl":"https://njbugninja.com/assets/mosquito-ninja-share-v17.jpg","encodingFormat":"image/jpeg","width":1536,"height":1024,"caption":"Mosquito Ninja outdoor pest control"}]}</script>
   <link rel="stylesheet" href="/mosquito-ninja-v24-refined.css?v=24.0.0">
-  <link rel="stylesheet" href="/mosquito-ninja-v25-refinements.css?v=25.0.0">
+  <link rel="stylesheet" href="/mosquito-ninja-v25-refinements.css?v=25.1.0">
   <link rel="stylesheet" href="/mosquito-ninja-v29-premium.css?v=31.0.0">
   <link rel="stylesheet" href="/mosquito-ninja-v32-products.css?v=32.0.0">
   <link rel="stylesheet" href="/mosquito-ninja-v33-elite.css?v=36.2.0">
@@ -130,6 +130,65 @@
         margin: 0 auto;
       }
     }
+    .hero .hero-trust{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      max-width:470px;
+      color:#f4f5f3;
+      letter-spacing:.08em;
+    }
+    .hero .hero-trust__item{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      min-width:0;
+    }
+    .hero .hero-trust__icon{
+      width:26px;
+      height:26px;
+      flex:0 0 26px;
+      display:grid;
+      place-items:center;
+      color:#e02027;
+    }
+    .hero .hero-trust__icon svg{
+      width:24px;
+      height:24px;
+      fill:currentColor;
+      stroke:currentColor;
+      stroke-width:1.5;
+    }
+    .hero .hero-trust__icon circle{stroke:none}
+    .hero .hero-trust__copy{display:grid;gap:2px;min-width:0}
+    .hero .hero-trust__copy strong,
+    .hero .hero-trust__copy small{
+      display:block;
+      color:#f4f5f3;
+      font-size:.625rem;
+      font-weight:800;
+      line-height:1.2;
+      letter-spacing:.1em;
+      white-space:nowrap;
+    }
+    .hero .hero-trust__copy small{color:#c0c6c1}
+    .hero .hero-trust__divider{
+      width:1px;
+      height:30px;
+      flex:0 0 1px;
+      border-radius:0;
+      background:rgba(255,255,255,.24);
+    }
+    @media (max-width:640px){
+      .hero .hero-trust{gap:10px;max-width:100%;margin-top:30px}
+      .hero .hero-trust__item{gap:7px}
+      .hero .hero-trust__icon{width:22px;height:22px;flex-basis:22px}
+      .hero .hero-trust__icon svg{width:21px;height:21px}
+      .hero .hero-trust__copy strong,
+      .hero .hero-trust__copy small{font-size:.54rem;letter-spacing:.085em}
+      .hero .hero-trust__divider{height:28px}
+    }
+
     /* Fall tick campaign: retain the existing responsive booking card styling. */
     .season-booking[data-prefill-service="tick"] .season-booking__signal {
       background: #9acb52;
@@ -172,23 +231,33 @@
         <p class="hero-lede hero-lede--desktop">Mosquitoes. Ticks. Outdoor flies. Consider them warned. Targeted mosquito, tick and outdoor fly control for South Jersey residential, commercial and government properties. One person quotes it, one person does it.</p>
         <p class="hero-lede hero-lede--phone">Mosquitoes. Ticks. Outdoor flies. Consider them warned. Targeted outdoor pest control for South Jersey homes, businesses and government properties.</p>
         <div class="hero-actions"><a class="btn primary" href="#quote">REQUEST A QUOTE <span>&rarr;</span></a><a class="btn ghost" href="tel:+16093136317">CALL MOSQUITO NINJA</a></div>
-        <div class="hero-meta"><span>MOSQUITO</span><i></i><span>TICK</span><i></i><span>OUTDOOR FLY</span></div>
+        <div class="hero-meta hero-trust" aria-label="South Jersey local, owner-operated service with people and pets in mind">
+          <span class="hero-trust__item">
+            <span class="hero-trust__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z"></path><circle cx="12" cy="10" r="2"></circle></svg></span>
+            <span class="hero-trust__copy"><strong>SOUTH JERSEY LOCAL</strong><small>OWNER-OPERATED</small></span>
+          </span>
+          <i class="hero-trust__divider" aria-hidden="true"></i>
+          <span class="hero-trust__item">
+            <span class="hero-trust__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="2"></circle><circle cx="12" cy="6" r="2"></circle><circle cx="16" cy="8" r="2"></circle><circle cx="6.5" cy="11.5" r="1.7"></circle><path d="M12 12c-3.5 0-6 2.6-6 5.1 0 1.7 1.4 2.9 3.1 2.9 1.1 0 1.9-.5 2.9-.5s1.8.5 2.9.5c1.7 0 3.1-1.2 3.1-2.9 0-2.5-2.5-5.1-6-5.1Z"></path></svg></span>
+            <span class="hero-trust__copy"><strong>PEOPLE &amp; PETS</strong><small>IN MIND</small></span>
+          </span>
+        </div>
       </div>
     </div>
-    <a class="season-booking" href="#quote" aria-label="Fall deer tick protection. Request fall tick service." data-prefill-service="tick">
+    <a class="season-booking" href="#quote" aria-label="Fall tick control. Send in the Ninja." data-prefill-service="tick">
       <span class="season-booking__energy" aria-hidden="true"></span>
       <span class="season-booking__signal" aria-hidden="true"></span>
-      <span class="season-booking__message"><strong>FALL DEER TICK PROTECTION</strong><span>Adult deer ticks are active in the fall. Ask about targeted tick control for your property.</span></span>
-      <span class="season-booking__action">REQUEST FALL TICK SERVICE <span aria-hidden="true">&rarr;</span></span>
+      <span class="season-booking__message"><strong>TICKS DON&rsquo;T TAKE THE FALL OFF.</strong><span>Neither do we. Ask Mosquito Ninja about targeted fall tick control for your property.</span></span>
+      <span class="season-booking__action">SEND IN THE NINJA <span aria-hidden="true">&rarr;</span></span>
     </a>
   </section>
 
   <section class="season-booking-mobile-section" aria-label="Fall deer tick service">
-    <a class="season-booking" href="#quote" aria-label="Fall deer tick protection. Request fall tick service." data-prefill-service="tick">
+    <a class="season-booking" href="#quote" aria-label="Fall tick control. Send in the Ninja." data-prefill-service="tick">
       <span class="season-booking__energy" aria-hidden="true"></span>
       <span class="season-booking__signal" aria-hidden="true"></span>
-      <span class="season-booking__message"><strong>FALL DEER TICK PROTECTION</strong><span>Adult deer ticks are active in the fall. Ask about targeted tick control for your property.</span></span>
-      <span class="season-booking__action">REQUEST FALL TICK SERVICE <span aria-hidden="true">&rarr;</span></span>
+      <span class="season-booking__message"><strong>TICKS DON&rsquo;T TAKE THE FALL OFF.</strong><span>Neither do we. Ask Mosquito Ninja about targeted fall tick control for your property.</span></span>
+      <span class="season-booking__action">SEND IN THE NINJA <span aria-hidden="true">&rarr;</span></span>
     </a>
   </section>
 
