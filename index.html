@@ -68,12 +68,13 @@
       .hero .hero-inner {
         display: block;
         min-height: 0;
-        padding-top: clamp(230px, 31svh, 285px);
-        padding-bottom: clamp(155px, 20svh, 205px);
+        padding-top: clamp(170px, 23svh, 205px);
+        padding-bottom: clamp(95px, 12svh, 130px);
       }
-      .hero .eyebrow { width: 230px; white-space: normal; }
+      .hero .eyebrow { width: 185px; white-space: normal; }
+      .hero .eyebrow { font-size: .68rem; letter-spacing: .16em; }
       .hero .hero-copy { width: 100%; max-width: 100%; padding: 0; }
-      .hero .eyebrow { max-width: 230px; margin-bottom: 22px; line-height: 1.5; }
+      .hero .eyebrow { max-width: 185px; margin-bottom: 20px; line-height: 1.45; }
       .hero h1 {
         max-width: 100%;
         font-size: clamp(43px, 12.3vw, 54px);
@@ -82,7 +83,7 @@
         text-wrap: balance;
       }
       .hero .hero-lede--phone {
-        max-width: min(88%, 390px);
+        max-width: min(82%, 360px);
         margin: 27px 0 0;
         font-size: clamp(14px, 3.85vw, 16px);
         line-height: 1.55;
@@ -99,15 +100,15 @@
 
       /* Show the eye and armor more clearly while maintaining a readable left text edge. */
       .hero .hero-art {
-        background-position: 62% 45%;
+        background-position: 62% 42%;
         background-size: auto 135%;
         filter: saturate(1.04) contrast(1.04) brightness(1.03);
       }
       .hero .hero-art:before {
         background:
           linear-gradient(90deg,
-            rgba(6,8,7,.82) 0%,
-            rgba(6,8,7,.42) 42%,
+            rgba(6,8,7,.70) 0%,
+            rgba(6,8,7,.30) 42%,
             rgba(6,8,7,.06) 100%),
           linear-gradient(0deg,rgba(5,7,6,.48),transparent 24%);
       }
@@ -116,7 +117,7 @@
       .season-booking-mobile-section {
         position: relative;
         z-index: 2;
-        padding: 34px 14px 40px;
+        padding: 24px 14px 120px;
         background: linear-gradient(180deg,#0d130f,#080c09);
         border-top: 1px solid rgba(224,32,39,.40);
       }
